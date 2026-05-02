@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://agreemint.example.com";
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://mintagree.com";
 
 export default function LandingPage() {
   return (
@@ -671,8 +671,8 @@ function JsonLD() {
       url: `${SITE_URL}/`,
       logo: `${SITE_URL}/logo.png`,
       sameAs: [
-        "https://www.linkedin.com/company/agreemint",
-        "https://twitter.com/agreemint",
+        "https://www.linkedin.com/company/mintagree",
+        "https://twitter.com/mintagree",
       ],
     },
     {

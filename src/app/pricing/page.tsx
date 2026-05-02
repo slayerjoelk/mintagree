@@ -176,7 +176,7 @@ export default function PricingPage() {
               </div>
             </div>
             <p className="text-xs text-slate-500 mt-4">
-              Need help? support@agreemint.example.com
+              Need help? support@mintagree.com
             </p>
           </div>
         </div>

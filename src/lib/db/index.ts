@@ -4,7 +4,7 @@ import * as schema from "./schema";
 import path from "path";
 import fs from "fs";
 
-const DB_PATH = path.join(process.cwd(), "data", "agreemint.db");
+const DB_PATH = path.join(process.cwd(), "data", "mintagree.db");
 const dir = path.dirname(DB_PATH);
 
 if (!fs.existsSync(dir)) {

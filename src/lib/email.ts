@@ -11,7 +11,7 @@ function escapeHtml(str: string): string {
     .replace(/'/g, "&#x27;");
 }
 
-const FROM = process.env.EMAIL_FROM || "AgreeMint <receipts@agreemint.com>";
+const FROM = process.env.EMAIL_FROM || "MintAgree <receipts@mintagree.com>";
 
 export async function sendMagicLinkEmail(
   email: string,
