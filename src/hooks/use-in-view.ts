@@ -9,6 +9,7 @@ export function useInView() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -19,7 +20,14 @@ export function useInView() {
       { threshold: 0.1 }
     );
     observer.observe(el);
-    return () => observer.disconnect();
+
+    // Fallback: some browsers / SSR-hydration edge cases never fire the observer
+    const fallback = setTimeout(() => setInView(true), 1200);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(fallback);
+    };
   }, []);
 
   return { ref, inView };
