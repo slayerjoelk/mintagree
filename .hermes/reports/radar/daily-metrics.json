@@ -1,0 +1,11 @@
+{
+  "date": "2026-05-03",
+  "signups": 0,
+  "receipts_created": 0,
+  "receipts_signed": 0,
+  "signoff_rate": 0,
+  "revenue_zar": 0,
+  "uptime_pct": 0,
+  "errors_5xx": 0,
+  "notes": "Pre-launch baseline. Database empty (no tables yet). Site not live (DNS unresolved)."
+}
