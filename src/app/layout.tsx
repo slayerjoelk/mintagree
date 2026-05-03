@@ -13,45 +13,39 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AgreeMint — Voice Agreement & Client Sign-Off Software",
+  title: "MintAgree — Conversation Receipts & Client Sign-Off",
   description:
-    "Voice agreement & client sign-off software. Create conversation receipts with OTP acknowledgement, scope, budget, due dates, and visual attachments for agencies, consultants, freelancers, SMBs and enterprises.",
+    "Turn every client call into a signed agreement receipt. Send conversation summaries with scope, budget, and OTP acknowledgement. Built for agencies, consultants, and freelancers.",
   keywords: [
     "voice agreement software",
-    "client sign-off software",
-    "conversation receipts",
-    "scope confirmation tool",
-    "budget confirmation",
-    "OTP acknowledgement",
-    "client approval software",
-    "post-call summary",
-    "voice to agreement",
-    "service business software",
+    "client sign-off tool",
+    "conversation receipt app",
+    "scope confirmation software",
+    "OTP client acknowledgment",
+    "post-call agreement",
+    "freelancer scope tool",
     "agency approval workflow",
     "consultant sign-off",
-    "freelancer scope tool",
-    "MSP agreement software",
-    "construction change order confirmation",
-    "creative brief sign-off",
-    "legal intake confirmation",
-    "sales call confirmation",
-    "customer approval receipt",
-    "project kickoff checklist",
+    "contract-lite for agencies",
     "meeting summary to agreement",
-    "contract-lite acknowledgement",
-    "receipt of conversation",
+    "client approval receipt",
   ],
+  metadataBase: new URL("https://mintagree.com"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "AgreeMint — Voice Agreement & Client Sign-Off Software",
+    title: "MintAgree — Every call ends with a receipt",
     description:
       "Turn calls into signed client agreement receipts. Send a clear conversation receipt with scope, budget and due dates, attach visuals, and capture OTP acknowledgement.",
     type: "website",
+    siteName: "MintAgree",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AgreeMint — Voice Agreement & Client Sign-Off Software",
+    title: "MintAgree — Every call ends with a receipt",
     description:
-      "Turn calls into signed client agreement receipts. Send a clear conversation receipt with scope, budget and due dates, attach visuals, and capture OTP acknowledgement.",
+      "Turn calls into signed client agreement receipts. Send a clear conversation receipt with scope, budget and due dates.",
   },
   robots: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
 };
