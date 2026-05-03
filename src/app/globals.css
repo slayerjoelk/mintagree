@@ -103,9 +103,9 @@ body {
   animation: blur-in 0.8s ease-out forwards;
 }
 
-.animate-blur-in-delay-1 { animation-delay: 0.15s; opacity: 0; }
-.animate-blur-in-delay-2 { animation-delay: 0.3s; opacity: 0; }
-.animate-blur-in-delay-3 { animation-delay: 0.45s; opacity: 0; }
+.animate-blur-in-delay-1 { animation-delay: 0.15s; }
+.animate-blur-in-delay-2 { animation-delay: 0.3s; }
+.animate-blur-in-delay-3 { animation-delay: 0.45s; }
 
 @keyframes bounce-bar {
   0%, 100% { transform: scaleY(0.3); }
