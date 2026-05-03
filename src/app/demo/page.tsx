@@ -18,6 +18,7 @@ export default function DemoPage() {
   const [otp, setOtp] = useState(() =>
     String(Math.floor(Math.random() * 900000) + 100000)
   );
+  const [otpInput, setOtpInput] = useState("");
   const [clientView, setClientView] = useState<any>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const [scheduleAt, setScheduleAt] = useState("");
@@ -158,6 +159,7 @@ export default function DemoPage() {
       .filter(Boolean);
     setTranscript(script);
     setBullets(lines);
+    setOtpInput("");
     setClientView({ receipt: buildReceipt(lines), state: "sent" });
   }
 
@@ -170,6 +172,7 @@ export default function DemoPage() {
   }
 
   function sendDemo() {
+    setOtpInput("");
     setClientView({ receipt: buildReceipt(), state: "sent" });
   }
 
@@ -266,17 +269,21 @@ export default function DemoPage() {
     return () => clearInterval(t);
   }, [scheduled, clientView]);
 
+  const inputCls = "w-full rounded-lg border border-white/10 bg-zinc-800 text-white px-3 py-2 mt-1 placeholder:text-zinc-500";
+  const btnCls = "rounded-xl border border-white/10 px-3 py-2 bg-zinc-700 hover:bg-zinc-600 text-white text-sm";
+
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-emerald-50/30">
-      <header className="sticky top-0 z-40 bg-white/85 backdrop-blur border-b">
+    <main className="min-h-screen bg-zinc-950">
+      <header className="sticky top-0 z-40 bg-zinc-950/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-semibold">
-            <span className="w-2 h-2 rounded-full bg-emerald-600" />
-            AgreeMint
+          <Link href="/" className="flex items-center gap-2 font-semibold text-white">
+            <span className="w-2 h-2 rounded-full bg-teal-400" />
+            MintAgree
           </Link>
           <Link
             href="/pricing"
-            className="px-3 py-2 rounded-xl border bg-emerald-600 text-white hover:bg-emerald-700 text-sm"
+            className="px-3 py-2 rounded-xl text-sm font-medium text-zinc-950"
+            style={{ backgroundColor: "#2dd4bf" }}
           >
             Subscribe
           </Link>
@@ -284,29 +291,29 @@ export default function DemoPage() {
       </header>
 
       <section className="max-w-7xl mx-auto px-6 py-12">
-        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-2">
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-2 text-white">
           Live demo
         </h1>
-        <p className="text-slate-600 mb-8">
-          Experience how AgreeMint turns voice into signed client agreement receipts.
+        <p className="text-zinc-400 mb-8">
+          Experience how MintAgree turns voice into signed client agreement receipts.
         </p>
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* Owner pane */}
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
+          <div className="rounded-2xl border border-white/10 bg-zinc-900 p-5">
             <div className="flex items-center justify-between mb-2">
-              <div className="font-semibold">Owner: voice → agreement</div>
-              <span className="text-xs text-slate-500">USD pricing</span>
+              <div className="font-semibold text-white">Owner: voice → agreement</div>
+              <span className="text-xs text-zinc-400">USD pricing</span>
             </div>
 
-            <div className="rounded-xl border p-3 bg-emerald-50/40">
+            <div className="rounded-xl border border-white/10 p-3 bg-zinc-800/60">
               <div className="flex flex-wrap items-center gap-3">
                 <button
                   className={
                     "rounded-xl border px-3 py-2 text-sm font-medium " +
                     (demoPlaying
-                      ? "bg-emerald-600 text-white"
-                      : "bg-white hover:bg-slate-50")
+                      ? "bg-teal-400 text-zinc-950 border-teal-400"
+                      : "border-white/10 bg-zinc-700 hover:bg-zinc-600 text-white")
                   }
                   onClick={playDemoCall}
                   disabled={demoPlaying}
@@ -317,15 +324,15 @@ export default function DemoPage() {
                   className={
                     "rounded-xl border px-3 py-2 text-sm font-medium " +
                     (recState === "recording"
-                      ? "bg-emerald-600 text-white"
-                      : "bg-white hover:bg-slate-50")
+                      ? "bg-teal-400 text-zinc-950 border-teal-400"
+                      : "border-white/10 bg-zinc-700 hover:bg-zinc-600 text-white")
                   }
                   onClick={recState === "recording" ? stopVoice : startVoice}
                 >
                   {recState === "recording" ? "Stop" : "Start"} live voice
                 </button>
                 <button
-                  className="rounded-xl border px-3 py-2 text-sm font-medium bg-white hover:bg-slate-50"
+                  className={btnCls + (!transcript.trim() ? " opacity-50 cursor-not-allowed" : "")}
                   onClick={applyTranscript}
                   disabled={!transcript.trim()}
                 >
@@ -334,68 +341,65 @@ export default function DemoPage() {
               </div>
               <textarea
                 aria-label="Transcript"
-                className="w-full rounded-lg border border-emerald-200 px-3 py-2 mt-3 text-sm"
+                className="w-full rounded-lg border border-white/10 bg-zinc-900 text-white px-3 py-2 mt-3 text-sm placeholder:text-zinc-500"
                 rows={4}
                 placeholder="Live transcript or demo text appears here…"
                 value={transcript}
                 onChange={(e) => setTranscript(e.target.value)}
               />
-              <p className="text-xs text-slate-600 mt-1">
+              <p className="text-xs text-zinc-500 mt-1">
                 Play the prepared call or speak live; we'll generate the receipt.
               </p>
             </div>
 
             <div className="grid gap-3 text-sm mt-4">
-              <label>
+              <label className="text-zinc-300">
                 Subject
                 <input
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 mt-1"
+                  className={inputCls}
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                 />
               </label>
 
               <div>
-                <div className="mb-1">Bullets</div>
+                <div className="mb-1 text-zinc-300">Bullets</div>
                 <div className="space-y-2">
                   {bullets.map((b, i) => (
                     <div key={i} className="flex gap-2 items-center">
                       <input
-                        className="flex-1 rounded-lg border border-slate-200 px-3 py-2"
+                        className="flex-1 rounded-lg border border-white/10 bg-zinc-800 text-white px-3 py-2"
                         value={b}
                         onChange={(e) => updateBullet(i, e.target.value)}
                       />
                       <button
-                        className="rounded-xl border px-3 py-2 bg-white hover:bg-slate-50 text-sm"
+                        className={btnCls}
                         onClick={() => removeBullet(i)}
                       >
                         −
                       </button>
                     </div>
                   ))}
-                  <button
-                    className="rounded-xl border px-3 py-2 bg-white hover:bg-slate-50 text-sm"
-                    onClick={addBullet}
-                  >
+                  <button className={btnCls} onClick={addBullet}>
                     + Add bullet
                   </button>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <label>
+                <label className="text-zinc-300">
                   Amount ({formatUSD(amount)})
                   <input
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 mt-1"
+                    className={inputCls}
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                   />
                 </label>
-                <label>
+                <label className="text-zinc-300">
                   Due date
                   <input
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 mt-1"
+                    className={inputCls}
                     type="date"
                     value={due}
                     onChange={(e) => setDue(e.target.value)}
@@ -403,7 +407,7 @@ export default function DemoPage() {
                 </label>
               </div>
 
-              <label className="inline-flex items-center gap-2">
+              <label className="inline-flex items-center gap-2 text-zinc-300">
                 <input
                   type="checkbox"
                   checked={requireOtp}
@@ -413,21 +417,21 @@ export default function DemoPage() {
               </label>
 
               {requireOtp && (
-                <label>
+                <label className="text-zinc-300">
                   OTP
                   <input
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 mt-1 font-mono text-lg tracking-widest"
+                    className={inputCls + " font-mono text-lg tracking-widest"}
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
                   />
                 </label>
               )}
 
-              <div className="border rounded-xl p-3">
-                <div className="font-medium mb-2">
+              <div className="border border-white/10 rounded-xl p-3 bg-zinc-800/40">
+                <div className="font-medium mb-2 text-zinc-200">
                   Visual attachment & scheduled delivery
                 </div>
-                <input type="file" accept="image/*" onChange={handleFile} />
+                <input type="file" accept="image/*" onChange={handleFile} className="text-zinc-300" />
                 {filePreview && (
                   <div className="mt-3 grid md:grid-cols-2 gap-3 items-start">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -435,25 +439,22 @@ export default function DemoPage() {
                       src={filePreview}
                       loading="lazy"
                       alt="visual attachment for client sign-off"
-                      className="rounded-lg border max-h-40 object-contain"
+                      className="rounded-lg border border-white/10 max-h-40 object-contain"
                     />
                     <div>
-                      <label>
+                      <label className="text-zinc-300 text-sm">
                         Send at
                         <input
-                          className="w-full rounded-lg border border-slate-200 px-3 py-2 mt-1"
+                          className={inputCls}
                           type="datetime-local"
                           value={scheduleAt}
                           onChange={(e) => setScheduleAt(e.target.value)}
                         />
                       </label>
-                      <button
-                        className="rounded-xl border px-3 py-2 bg-white hover:bg-slate-50 mt-2 text-sm"
-                        onClick={scheduleVisual}
-                      >
+                      <button className={btnCls + " mt-2"} onClick={scheduleVisual}>
                         Schedule
                       </button>
-                      <div className="text-xs text-slate-600 mt-2">
+                      <div className="text-xs text-zinc-500 mt-2">
                         {scheduled.length
                           ? scheduled
                               .map(
@@ -469,7 +470,8 @@ export default function DemoPage() {
               </div>
 
               <button
-                className="inline-flex items-center justify-center rounded-xl border px-4 py-3 text-sm font-medium shadow-sm bg-emerald-600 text-white hover:bg-emerald-700"
+                className="inline-flex items-center justify-center rounded-xl px-4 py-3 text-sm font-medium text-zinc-950"
+                style={{ backgroundColor: "#2dd4bf" }}
                 onClick={sendDemo}
               >
                 Send receipt
@@ -478,17 +480,17 @@ export default function DemoPage() {
           </div>
 
           {/* Client pane */}
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <div className="font-semibold mb-2">Client: signing preview</div>
+          <div className="rounded-2xl border border-white/10 bg-zinc-900 p-5">
+            <div className="font-semibold mb-2 text-white">Client: signing preview</div>
             {!clientView && (
-              <div className="text-slate-500 text-sm text-center py-12">
+              <div className="text-zinc-500 text-sm text-center py-12">
                 No receipt yet. Click "Play demo call" or "Send receipt" to preview
                 what your client sees.
               </div>
             )}
             {clientView && (
-              <div className="text-sm">
-                <div className="text-xl font-semibold mb-2">
+              <div className="text-sm text-zinc-200">
+                <div className="text-xl font-semibold mb-2 text-white">
                   {clientView.receipt.subject}
                 </div>
                 <ul className="list-disc pl-5 space-y-1">
@@ -497,9 +499,9 @@ export default function DemoPage() {
                   ))}
                 </ul>
                 <div className="mt-3">
-                  Amount: <b>{formatUSD(clientView.receipt.amountUSD)}</b>
+                  Amount: <b className="text-white">{formatUSD(clientView.receipt.amountUSD)}</b>
                   {clientView.receipt.due && (
-                    <span className="text-slate-500">
+                    <span className="text-zinc-500">
                       {" "}
                       · Due {clientView.receipt.due}
                     </span>
@@ -508,13 +510,13 @@ export default function DemoPage() {
 
                 {clientView.receipt.visuals?.length > 0 && (
                   <div className="mt-3">
-                    <div className="font-medium mb-1">Attached visual</div>
+                    <div className="font-medium mb-1 text-zinc-300">Attached visual</div>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={clientView.receipt.visuals[0].url}
                       loading="lazy"
                       alt="attachment"
-                      className="rounded-lg border max-h-40 object-contain"
+                      className="rounded-lg border border-white/10 max-h-40 object-contain"
                     />
                   </div>
                 )}
@@ -524,16 +526,17 @@ export default function DemoPage() {
                     {clientView.receipt.requireOtp && (
                       <input
                         placeholder="Enter OTP"
-                        className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
-                        onChange={(e) => (clientView.otpInput = e.target.value)}
+                        className="rounded-lg border border-white/10 bg-zinc-800 text-white px-3 py-2 text-sm placeholder:text-zinc-500"
+                        value={otpInput}
+                        onChange={(e) => setOtpInput(e.target.value)}
                       />
                     )}
                     <button
-                      className="rounded-xl border px-3 py-2 bg-white hover:bg-slate-50 text-sm"
+                      className={btnCls}
                       onClick={() => {
                         if (
                           clientView.receipt.requireOtp &&
-                          clientView.otpInput !== clientView.receipt.otp
+                          otpInput !== clientView.receipt.otp
                         ) {
                           alert("Incorrect OTP. Please check the code and try again.");
                           return;
@@ -544,7 +547,7 @@ export default function DemoPage() {
                       Acknowledge ✅
                     </button>
                     <button
-                      className="rounded-xl border px-3 py-2 bg-white hover:bg-slate-50 text-sm"
+                      className={btnCls}
                       onClick={() =>
                         setClientView({ ...clientView, state: "disputed" })
                       }
@@ -559,17 +562,17 @@ export default function DemoPage() {
                     className={
                       "inline-flex px-2 py-0.5 rounded-full font-medium " +
                       (clientView.state === "ack"
-                        ? "bg-emerald-100 text-emerald-700"
+                        ? "bg-teal-900/50 text-teal-300"
                         : clientView.state === "disputed"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-slate-100 text-slate-700")
+                        ? "bg-red-900/50 text-red-400"
+                        : "bg-zinc-800 text-zinc-400")
                     }
                   >
                     Status: {clientView.state === "ack" ? "Signed ✅" : clientView.state === "disputed" ? "Disputed ⚡" : clientView.state}
                   </span>
                 </div>
 
-                <div className="mt-4 p-3 rounded-xl bg-slate-50 border text-xs text-slate-500">
+                <div className="mt-4 p-3 rounded-xl bg-zinc-800/50 border border-white/10 text-xs text-zinc-500">
                   This is a conversation receipt — not a legally binding contract.
                   OTP provides lightweight identity confirmation. Always follow your
                   jurisdiction's rules.
