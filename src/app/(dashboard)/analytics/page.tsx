@@ -15,68 +15,66 @@ export default async function AnalyticsPage() {
   const monthStartSeconds = Math.floor(monthStart.getTime() / 1000);
 
   // Simple parallel queries — no nested .then() chains
-  const allTime = await db
+  const [allTime] = await db
     .select({ count: sql<number>`count(*)` })
     .from(receipts)
     .where(eq(receipts.userId, uid))
-    .get();
+    .limit(1);
 
-  const thisMonthSent = await db
+  const [thisMonthSent] = await db
     .select({ count: sql<number>`count(*)` })
     .from(receipts)
     .where(and(eq(receipts.userId, uid), sql`created_at >= ${monthStartSeconds}`))
-    .get();
+    .limit(1);
 
-  const thisWeekSent = await db
+  const [thisWeekSent] = await db
     .select({ count: sql<number>`count(*)` })
     .from(receipts)
     .where(and(eq(receipts.userId, uid), sql`created_at >= ${weekAgoSeconds}`))
-    .get();
+    .limit(1);
 
-  const signed = await db
+  const [signed] = await db
     .select({ count: sql<number>`count(*)` })
     .from(receipts)
     .where(and(eq(receipts.userId, uid), eq(receipts.status, "signed")))
-    .get();
+    .limit(1);
 
-  const disputed = await db
+  const [disputed] = await db
     .select({ count: sql<number>`count(*)` })
     .from(receipts)
     .where(and(eq(receipts.userId, uid), eq(receipts.status, "disputed")))
-    .get();
+    .limit(1);
 
-  const pending = await db
+  const [pending] = await db
     .select({ count: sql<number>`count(*)` })
     .from(receipts)
     .where(and(eq(receipts.userId, uid), eq(receipts.status, "sent")))
-    .get();
+    .limit(1);
 
   const signedRow = signed?.count ?? 0;
   const totalRow = allTime?.count ?? 0;
   const signOffRate = totalRow > 0 ? Math.round((signedRow / totalRow) * 100) : 0;
 
-  const topClients = db
-    .all<{ client_email: string; total: number }>(
-      sql`
-        SELECT client_email, count(*) as total
-        FROM receipts
-        WHERE user_id = ${uid} AND client_email IS NOT NULL
-        GROUP BY client_email
-        ORDER BY total DESC
-        LIMIT 5
-      `
-    );
+  const topClients = await db.all(
+    sql`
+      SELECT client_email, count(*) as total
+      FROM receipts
+      WHERE user_id = ${uid} AND client_email IS NOT NULL
+      GROUP BY client_email
+      ORDER BY total DESC
+      LIMIT 5
+    `
+  ) as Array<{ client_email: string; total: number }>;
 
-  const dailyVolume = db
-    .all<{ day: string; count: number }>(
-      sql`
-        SELECT date(created_at, 'unixepoch') as day, count(*) as count
-        FROM receipts
-        WHERE user_id = ${uid} AND created_at >= ${weekAgoSeconds}
-        GROUP BY day
-        ORDER BY day
-      `
-    );
+  const dailyVolume = await db.all(
+    sql`
+      SELECT date(created_at, 'unixepoch') as day, count(*) as count
+      FROM receipts
+      WHERE user_id = ${uid} AND created_at >= ${weekAgoSeconds}
+      GROUP BY day
+      ORDER BY day
+    `
+  ) as Array<{ day: string; count: number }>;
 
   return (
     <div>

@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   let emailFailed = false;
 
   const receipt = await db.transaction(async (tx) => {
-    const inserted = tx
+    const [inserted] = await tx
       .insert(receipts)
       .values({
         userId,
@@ -48,21 +48,20 @@ export async function POST(req: NextRequest) {
         otp,
         status: "draft",
       })
-      .returning()
-      .get();
+      .returning();
 
     if (clientEmail) {
-      const existing = tx
+      const [existing] = await tx
         .select({ id: clients.id })
         .from(clients)
         .where(and(eq(clients.userId, userId), eq(clients.email, clientEmail)))
-        .get();
+        .limit(1);
       if (!existing) {
-        tx.insert(clients).values({
+        await tx.insert(clients).values({
           userId,
           email: clientEmail,
           name: clientName ?? null,
-        }).run();
+        });
       }
 
       const signUrl = `${process.env.NEXT_PUBLIC_APP_URL}/sign/${token}`;
@@ -81,11 +80,11 @@ export async function POST(req: NextRequest) {
         return inserted;
       }
 
-      tx.update(receipts).set({ status: "sent" }).where(eq(receipts.id, inserted.id)).run();
+      await tx.update(receipts).set({ status: "sent" }).where(eq(receipts.id, inserted.id));
       return { ...inserted, status: "sent" as const };
     }
 
-    tx.update(receipts).set({ status: "sent" }).where(eq(receipts.id, inserted.id)).run();
+    await tx.update(receipts).set({ status: "sent" }).where(eq(receipts.id, inserted.id));
     return { ...inserted, status: "sent" as const };
   });
 

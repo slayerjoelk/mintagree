@@ -22,7 +22,7 @@ export async function GET(
 
   const { threadId } = await params;
 
-  const thread = await db
+  const [thread] = await db
     .select()
     .from(conversationThreads)
     .where(
@@ -31,13 +31,13 @@ export async function GET(
         eq(conversationThreads.userId, session.user.id)
       )
     )
-    .get();
+		.limit(1);
 
   if (!thread) {
     return NextResponse.json({ error: "Thread not found" }, { status: 404 });
   }
 
-  const msgs = await db
+  const [msgs] = await db
     .select()
     .from(messages)
     .where(eq(messages.threadId, threadId))
@@ -63,7 +63,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid input" }, { status: 400 });
   }
 
-  const existing = await db
+  const [existing] = await db
     .select()
     .from(conversationThreads)
     .where(
@@ -72,7 +72,7 @@ export async function PATCH(
         eq(conversationThreads.userId, session.user.id)
       )
     )
-    .get();
+		.limit(1);
 
   if (!existing) {
     return NextResponse.json({ error: "Thread not found" }, { status: 404 });

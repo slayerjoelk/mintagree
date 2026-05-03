@@ -18,7 +18,7 @@ export async function GET(
   const { threadId } = await params;
 
   // Verify thread belongs to user
-  const thread = await db
+  const [thread] = await db
     .select()
     .from(conversationThreads)
     .where(
@@ -27,7 +27,7 @@ export async function GET(
         eq(conversationThreads.userId, session.user.id)
       )
     )
-    .get();
+    .limit(1);
 
   if (!thread) {
     return NextResponse.json({ error: "Thread not found" }, { status: 404 });

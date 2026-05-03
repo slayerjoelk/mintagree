@@ -35,17 +35,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const existing = await db
+    const [existing] = await db
     .select({ id: clients.id })
     .from(clients)
     .where(and(eq(clients.userId, session.user.id), eq(clients.email, parsed.data.email)))
-    .get();
+    .limit(1);
 
   if (existing) {
     return NextResponse.json({ error: "Client with this email already exists" }, { status: 409 });
   }
 
-  const client = await db
+  const [client] = await db
     .insert(clients)
     .values({
       userId: session.user.id,
@@ -53,8 +53,7 @@ export async function POST(req: NextRequest) {
       name: parsed.data.name ?? null,
       company: parsed.data.company ?? null,
     })
-    .returning()
-    .get();
+    .returning();
 
   return NextResponse.json({ client }, { status: 201 });
 }

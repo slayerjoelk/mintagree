@@ -16,11 +16,11 @@ export async function GET(
   }
 
   const { id } = await params;
-  const receipt = await db
+  const [receipt] = await db
     .select()
     .from(receipts)
     .where(eq(receipts.id, id))
-    .get();
+    .limit(1);
 
   if (!receipt || receipt.userId !== session.user.id) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -54,11 +54,11 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  const receipt = await db
+  const [receipt] = await db
     .select()
     .from(receipts)
     .where(eq(receipts.id, id))
-    .get();
+    .limit(1);
 
   if (!receipt || receipt.userId !== session.user.id) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -75,7 +75,7 @@ export async function PATCH(
 
   const { subject, bullets, amount, currency, dueDate, clientEmail, clientName, requireOtp } = parsed.data;
 
-  const updated = await db
+  const [updated] = await db
     .update(receipts)
     .set({
       ...(subject !== undefined && { subject }),
@@ -89,8 +89,7 @@ export async function PATCH(
       updatedAt: new Date(),
     })
     .where(eq(receipts.id, id))
-    .returning()
-    .get();
+    .returning();
 
   return NextResponse.json({ receipt: updated });
 }
@@ -106,11 +105,11 @@ export async function DELETE(
   }
 
   const { id } = await params;
-  const receipt = await db
+  const [receipt] = await db
     .select()
     .from(receipts)
     .where(eq(receipts.id, id))
-    .get();
+    .limit(1);
 
   if (!receipt || receipt.userId !== session.user.id) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });

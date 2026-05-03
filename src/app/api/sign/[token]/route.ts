@@ -16,11 +16,11 @@ export async function GET(
   { params }: { params: Promise<{ token: string }> }
 ) {
   const { token } = await params;
-  const receipt = await db
+  const [receipt] = await db
     .select()
     .from(receipts)
     .where(eq(receipts.token, token))
-    .get();
+    .limit(1);
 
   if (!receipt) {
     return NextResponse.json({ error: "Receipt not found" }, { status: 404 });
@@ -58,11 +58,11 @@ export async function POST(
   { params }: { params: Promise<{ token: string }> }
 ) {
   const { token } = await params;
-  const receipt = await db
+  const [receipt] = await db
     .select()
     .from(receipts)
     .where(eq(receipts.token, token))
-    .get();
+    .limit(1);
 
   if (!receipt) {
     return NextResponse.json({ error: "Receipt not found" }, { status: 404 });
@@ -122,25 +122,24 @@ export async function POST(
   const newStatus = action === "acknowledged" ? "signed" : "disputed";
 
   await db.transaction(async (tx) => {
-    tx.update(receipts)
+    await tx.update(receipts)
       .set({ status: newStatus, updatedAt: new Date() })
-      .where(eq(receipts.id, receipt.id))
-      .run();
+      .where(eq(receipts.id, receipt.id));
 
-    tx.insert(signatures).values({
+    await tx.insert(signatures).values({
       receiptId: receipt.id,
       clientEmail: receipt.clientEmail || "unknown",
       clientName: clientName || null,
       action,
       otpUsed: otp || null,
       ip,
-    }).run();
+    });
 
-    const user = tx
+    const [user] = await tx
       .select({ email: users.email })
       .from(users)
       .where(eq(users.id, receipt.userId))
-      .get();
+      .limit(1);
 
     if (user?.email) {
       await sendReceiptSignedNotification(

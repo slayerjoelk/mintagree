@@ -1,20 +1,17 @@
-import Database from "better-sqlite3";
-import { drizzle, type BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
+import { createClient } from "@libsql/client";
+import { drizzle, type LibSQLDatabase } from "drizzle-orm/libsql";
 import * as schema from "./schema";
-import path from "path";
-import fs from "fs";
 
-const DB_PATH = path.join(process.cwd(), "data", "mintagree.db");
-const dir = path.dirname(DB_PATH);
+const url = process.env.DATABASE_URL;
+const authToken = process.env.TURSO_AUTH_TOKEN;
 
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir, { recursive: true });
-}
+if (!url) throw new Error("DATABASE_URL is not set");
 
-const sqlite = new Database(DB_PATH, { timeout: 5000 });
-sqlite.pragma("journal_mode = WAL");
-sqlite.pragma("foreign_keys = ON");
-sqlite.pragma("busy_timeout = 5000");
+const client = createClient({
+  url,
+  ...(authToken ? { authToken } : {}),
+});
 
-export const db = drizzle(sqlite, { schema }) as BetterSQLite3Database<typeof schema>;
+export const db = drizzle(client, { schema }) as LibSQLDatabase<typeof schema>;
+export const rawClient = client;
 export { schema };

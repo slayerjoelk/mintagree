@@ -16,11 +16,11 @@ export async function GET(
   }
 
   const { id } = await params;
-  const template = await db
+  const [template] = await db
     .select()
     .from(templates)
     .where(eq(templates.id, id))
-    .get();
+    .limit(1);
 
   if (!template || template.userId !== session.user.id) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -43,11 +43,11 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  const template = await db
+  const [template] = await db
     .select()
     .from(templates)
     .where(eq(templates.id, id))
-    .get();
+    .limit(1);
 
   if (!template || template.userId !== session.user.id) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -64,7 +64,7 @@ export async function PATCH(
 
   const { name, subject, bullets, amount, industry } = parsed.data;
 
-  const updated = await db
+  const [updated] = await db
     .update(templates)
     .set({
       ...(name !== undefined && { name }),
@@ -74,8 +74,7 @@ export async function PATCH(
       ...(industry !== undefined && { industry }),
     })
     .where(eq(templates.id, id))
-    .returning()
-    .get();
+    .returning();
 
   return NextResponse.json({ template: updated });
 }
@@ -91,11 +90,11 @@ export async function DELETE(
   }
 
   const { id } = await params;
-  const template = await db
+  const [template] = await db
     .select()
     .from(templates)
     .where(eq(templates.id, id))
-    .get();
+    .limit(1);
 
   if (!template || template.userId !== session.user.id) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });

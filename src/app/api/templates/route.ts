@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const template = await db
+  const [template] = await db
     .insert(templates)
     .values({
       userId: session.user.id,
@@ -45,8 +45,7 @@ export async function POST(req: NextRequest) {
       amount: parsed.data.amount ?? null,
       industry: parsed.data.industry ?? null,
     })
-    .returning()
-    .get();
+    .returning();
 
   return NextResponse.json({ template }, { status: 201 });
 }

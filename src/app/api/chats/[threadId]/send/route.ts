@@ -58,7 +58,7 @@ export async function POST(
   const otp = requireOtp ? generateOtp() : null;
 
   // Verify thread belongs to user
-  const thread = await db
+  const [thread] = await db
     .select()
     .from(conversationThreads)
     .where(
@@ -67,7 +67,7 @@ export async function POST(
         eq(conversationThreads.userId, userId)
       )
     )
-    .get();
+    .limit(1);
 
   if (!thread) {
     return NextResponse.json({ error: "Thread not found" }, { status: 404 });
@@ -78,7 +78,7 @@ export async function POST(
 
   const result = await db.transaction(async (tx) => {
     // 1. Create receipt
-    const inserted = tx
+    const [inserted] = await tx
       .insert(receipts)
       .values({
         userId,
@@ -95,35 +95,34 @@ export async function POST(
         otp,
         status: "draft",
       })
-      .returning()
-      .get();
+      .returning();
 
     // 2. Upsert client if not exists
     if (clientEmail) {
-      const existing = tx
+      const [existing] = await tx
         .select({ id: clients.id })
         .from(clients)
         .where(and(eq(clients.userId, userId), eq(clients.email, clientEmail)))
-        .get();
+        .limit(1);
       if (!existing) {
-        tx.insert(clients).values({
+        await tx.insert(clients).values({
           userId,
           email: clientEmail,
           name: clientName ?? null,
           phone: phone ?? null,
           channel: "whatsapp",
           whatsappOptIn: true,
-        }).run();
+        });
       }
     }
 
     // 3. Send WhatsApp message (PRIMARY channel)
     const signUrl = `${process.env.NEXT_PUBLIC_APP_URL}/sign/${token}`;
-    const whatsAppBody = `Hi${clientName ? ` ${clientName}` : ""}. Here is what we agreed:\n\n${bullets.map((b) => `\u2022 ${b}`).join("\n")}${amount ? `\n\nAmount: ${currency || "USD"} ${amount}` : ""}\n\nPlease review and confirm:\n${signUrl}${requireOtp && otp ? `\n\nYour OTP: ${otp}` : ""}`;
+    const whatsAppBody = `Hi${clientName ? ` ${clientName}` : ""}. Here is what we agreed:\n\n${bullets.map((b) => `• ${b}`).join("\n")}${amount ? `\n\nAmount: ${currency || "USD"} ${amount}` : ""}\n\nPlease review and confirm:\n${signUrl}${requireOtp && otp ? `\n\nYour OTP: ${otp}` : ""}`;
 
     const waResult = await sendWhatsAppMessage(phone, whatsAppBody);
 
-    tx.insert(receiptDelivery).values({
+    await tx.insert(receiptDelivery).values({
       id: createId(),
       receiptId: inserted.id,
       channel: "whatsapp",
@@ -131,7 +130,7 @@ export async function POST(
       externalId: waResult.sid ?? null,
       error: waResult.error ?? null,
       sentAt: new Date(),
-    }).run();
+    });
 
     // 4. Send email (BACKUP channel)
     let emailResult = null;
@@ -146,32 +145,30 @@ export async function POST(
         signUrl,
       });
 
-      tx.insert(receiptDelivery).values({
+      await tx.insert(receiptDelivery).values({
         id: createId(),
         receiptId: inserted.id,
         channel: "email",
         status: emailResult.success ? "sent" : "failed",
         error: emailResult.error ?? null,
         sentAt: new Date(),
-      }).run();
+      });
     }
 
     // 5. Update receipt status
     const allDelivered = waResult.success && (!clientEmail || emailResult?.success);
-    tx.update(receipts)
+    await tx.update(receipts)
       .set({ status: allDelivered ? "sent" : "draft" })
-      .where(eq(receipts.id, inserted.id))
-      .run();
+      .where(eq(receipts.id, inserted.id));
 
     // 6. Update thread: mark completed, attach receipt
-    tx.update(conversationThreads)
+    await tx.update(conversationThreads)
       .set({
         status: "completed",
         draftReceiptId: inserted.id,
         updatedAt: new Date(),
       })
-      .where(eq(conversationThreads.id, threadId))
-      .run();
+      .where(eq(conversationThreads.id, threadId));
 
     return {
       receipt: { ...inserted, status: allDelivered ? "sent" : "draft" },
