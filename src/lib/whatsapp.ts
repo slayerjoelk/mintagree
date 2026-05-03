@@ -97,6 +97,7 @@ export async function storeInboundMessage(params: {
       draftReceiptId: null,
       messageCount: 1,
       aiSummary: null,
+      subject: null,
       lastMessageAt: new Date(),
       createdAt: new Date(),
       updatedAt: new Date(),

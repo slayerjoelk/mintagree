@@ -36,6 +36,7 @@ export default async function DashboardLayout({
             <SidebarLink href="/dashboard" label="Home" icon="🏠" />
             <SidebarLink href="/dashboard/receipts" label="Receipts" icon="📄" />
             <SidebarLink href="/dashboard/receipts/new" label="New receipt" icon="➕" />
+            <SidebarLink href="/dashboard/chats" label="WhatsApp" icon="💬" />
             <SidebarLink href="/dashboard/clients" label="Clients" icon="👥" />
             <SidebarLink href="/dashboard/templates" label="Templates" icon="📋" />
             <SidebarLink href="/dashboard/analytics" label="Analytics" icon="📊" />
@@ -54,6 +55,7 @@ export default async function DashboardLayout({
         <MobileNavLink href="/dashboard" label="Home" icon="🏠" />
         <MobileNavLink href="/dashboard/receipts" label="Receipts" icon="📄" />
         <MobileNavLink href="/dashboard/receipts/new" label="New" icon="➕" />
+        <MobileNavLink href="/dashboard/chats" label="Chats" icon="💬" />
         <MobileNavLink href="/dashboard/clients" label="Clients" icon="👥" />
         <MobileNavLink href="/dashboard/templates" label="Templates" icon="📋" />
         <MobileNavLink href="/dashboard/analytics" label="Analytics" icon="📊" />

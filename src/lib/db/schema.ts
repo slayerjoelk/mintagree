@@ -160,10 +160,11 @@ export const conversationThreads = sqliteTable("conversation_threads", {
   clientName: text("client_name"),
   clientEmail: text("client_email"),
   source: text("source").notNull(), // whatsapp | voice
-  status: text("status").default("active"), // active | needs_attention | completed | skipped
+  status: text("status").default("active"), // active | pending_review | completed | skipped
   draftReceiptId: text("draft_receipt_id"),
   lastMessageAt: integer("last_message_at", { mode: "timestamp" }),
   messageCount: integer("message_count").default(0),
+  subject: text("subject"),
   aiSummary: text("ai_summary"),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
