@@ -14,11 +14,11 @@ export default async function ReceiptDetailPage({
   if (!session?.user) redirect("/login");
 
   const { id } = await params;
-  const receipt = await db
+  const [receipt] = await db
     .select()
     .from(receipts)
     .where(eq(receipts.id, id))
-    .get();
+    .limit(1);
 
   if (!receipt || receipt.userId !== session.user.id) {
     return (

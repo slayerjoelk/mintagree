@@ -12,17 +12,17 @@ export default async function DashboardPage() {
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  const [total, signed, pending, thisMonth] = await Promise.all([
+  const [totalResult, signedResult, pendingResult, thisMonthResult] = await Promise.all([
     db
       .select({ count: sql<number>`count(*)` })
       .from(receipts)
       .where(eq(receipts.userId, session.user.id))
-      .get(),
+      .limit(1),
     db
       .select({ count: sql<number>`count(*)` })
       .from(receipts)
       .where(and(eq(receipts.userId, session.user.id), eq(receipts.status, "signed")))
-      .get(),
+      .limit(1),
     db
       .select({ count: sql<number>`count(*)` })
       .from(receipts)
@@ -32,7 +32,7 @@ export default async function DashboardPage() {
           eq(receipts.status, "sent")
         )
       )
-      .get(),
+      .limit(1),
     db
       .select({ count: sql<number>`count(*)` })
       .from(receipts)
@@ -42,8 +42,13 @@ export default async function DashboardPage() {
           sql`created_at >= ${Math.floor(monthStart.getTime() / 1000)}`
         )
       )
-      .get(),
+      .limit(1),
   ]);
+
+  const total = totalResult[0];
+  const signed = signedResult[0];
+  const pending = pendingResult[0];
+  const thisMonth = thisMonthResult[0];
 
   return (
     <div>

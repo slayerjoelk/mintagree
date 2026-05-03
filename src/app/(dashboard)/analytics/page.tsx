@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
+import { db, rawClient } from "@/lib/db";
 import { receipts } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 
@@ -55,26 +55,17 @@ export default async function AnalyticsPage() {
   const totalRow = allTime?.count ?? 0;
   const signOffRate = totalRow > 0 ? Math.round((signedRow / totalRow) * 100) : 0;
 
-  const topClients = await db.all(
-    sql`
-      SELECT client_email, count(*) as total
-      FROM receipts
-      WHERE user_id = ${uid} AND client_email IS NOT NULL
-      GROUP BY client_email
-      ORDER BY total DESC
-      LIMIT 5
-    `
-  ) as Array<{ client_email: string; total: number }>;
+  const topClientsRaw = await (rawClient.execute || (db as any).execute)({
+    sql: `SELECT client_email, count(*) as total FROM receipts WHERE user_id = ? AND client_email IS NOT NULL GROUP BY client_email ORDER BY total DESC LIMIT 5`,
+    args: [uid],
+  });
+  const topClients = (topClientsRaw.rows as unknown as Array<{ client_email: string; total: number }>) ?? [];
 
-  const dailyVolume = await db.all(
-    sql`
-      SELECT date(created_at, 'unixepoch') as day, count(*) as count
-      FROM receipts
-      WHERE user_id = ${uid} AND created_at >= ${weekAgoSeconds}
-      GROUP BY day
-      ORDER BY day
-    `
-  ) as Array<{ day: string; count: number }>;
+  const dailyVolumeRaw = await (rawClient.execute || (db as any).execute)({
+    sql: `SELECT date(created_at, 'unixepoch') as day, count(*) as count FROM receipts WHERE user_id = ? AND created_at >= ? GROUP BY day ORDER BY day`,
+    args: [uid, String(weekAgoSeconds)],
+  });
+  const dailyVolume = (dailyVolumeRaw.rows as unknown as Array<{ day: string; count: number }>) ?? [];
 
   return (
     <div>
