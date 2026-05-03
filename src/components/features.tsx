@@ -1,6 +1,39 @@
 "use client";
 
 import { useInView } from "@/hooks/use-in-view";
+import { useRef } from "react";
+
+function TiltCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMove = (e: React.MouseEvent) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    const tiltX = (y - 0.5) * 10;
+    const tiltY = (x - 0.5) * -10;
+    card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(10px)`;
+  };
+
+  const handleLeave = () => {
+    if (cardRef.current) {
+      cardRef.current.style.transform = "perspective(1000px) rotateX(0) rotateY(0) translateZ(0)";
+    }
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+      className={`transition-transform duration-200 ease-out will-change-transform ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
 
 const features = [
   {
@@ -96,12 +129,12 @@ export default function Features() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-fr">
         {features.map((f, i) =>
           f.large ? (
-            <div
-              key={i}
-              className={`md:col-span-2 md:row-span-2 rounded-2xl border border-zinc-800 bg-surface p-6 md:p-8 flex flex-col justify-between group hover:border-zinc-700 hover:-translate-y-1 hover:shadow-lg transition-all ${
-                inView ? "animate-fade-in-up" : "opacity-0"
-              }`}
-            >
+            <TiltCard key={i} className="md:col-span-2 md:row-span-2">
+              <div
+                className={`rounded-2xl border border-zinc-800 bg-surface p-6 md:p-8 flex flex-col justify-between h-full group hover:border-zinc-700 hover:shadow-lg transition-colors ${
+                  inView ? "animate-blur-in" : "opacity-0"
+                }`}
+              >
               <div>
                 <div className="w-10 h-10 rounded-xl bg-mint/10 border border-mint/20 flex items-center justify-center text-mint mb-4">
                   {f.icon}
@@ -117,11 +150,12 @@ export default function Features() {
                 <span className="text-zinc-600">{`{ "scope", "budget" }`}</span>
               </div>
             </div>
+          </TiltCard>
           ) : (
+            <TiltCard key={i}>
             <div
-              key={i}
-              className={`rounded-2xl border border-zinc-800 bg-surface p-5 group hover:border-zinc-700 hover:-translate-y-1 hover:shadow-md hover:bg-gradient-to-b hover:from-transparent hover:to-mint/5 transition-all ${
-                inView ? delayClasses[i] || "animate-fade-in-up" : "opacity-0"
+              className={`rounded-2xl border border-zinc-800 bg-surface p-5 h-full group hover:border-zinc-700 hover:shadow-md hover:bg-gradient-to-b hover:from-transparent hover:to-mint/5 transition-colors ${
+                inView ? delayClasses[i] || "animate-blur-in" : "opacity-0"
               }`}
             >
               <div className="w-9 h-9 rounded-lg bg-mint/10 border border-mint/20 flex items-center justify-center text-mint mb-3">
@@ -132,6 +166,7 @@ export default function Features() {
                 {f.description}
               </p>
             </div>
+          </TiltCard>
           )
         )}
       </div>

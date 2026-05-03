@@ -1,5 +1,6 @@
 import Nav from "@/components/nav";
 import Hero from "@/components/hero";
+import FloatingOrbs from "@/components/floating-orbs";
 import CanvasBackground from "@/components/canvas-background";
 import SocialProof from "@/components/social-proof";
 import HowItWorks from "@/components/how-it-works";
@@ -13,17 +14,20 @@ import Footer from "@/components/footer";
 export default function LandingPage() {
   return (
     <main className="relative min-h-screen bg-background text-foreground overflow-hidden">
+      <FloatingOrbs />
       <CanvasBackground />
-      <Nav />
-      <Hero />
-      <SocialProof />
-      <HowItWorks />
-      <Features />
-      <Solutions />
-      <PricingSection />
-      <FAQ />
-      <CTASection />
-      <Footer />
+      <div className="relative z-10">
+        <Nav />
+        <Hero />
+        <SocialProof />
+        <HowItWorks />
+        <Features />
+        <Solutions />
+        <PricingSection />
+        <FAQ />
+        <CTASection />
+        <Footer />
+      </div>
     </main>
   );
 }

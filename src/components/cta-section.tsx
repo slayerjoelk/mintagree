@@ -13,7 +13,7 @@ export default function CTASection() {
         inView ? "animate-fade-in-up" : "opacity-0"
       }`}
     >
-      <div className="max-w-3xl mx-auto px-6 text-center">
+      <div className="glow-border max-w-3xl mx-auto px-6 py-20 md:py-28 text-center">
         <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
           Stop losing money to{" "}
           <span className="text-mint">scope creep</span>.
