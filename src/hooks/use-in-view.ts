@@ -1,27 +1,29 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 export function useInView(options?: IntersectionObserverInit) {
-  const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
+  const [node, setNode] = useState<HTMLDivElement | null>(null);
+
+  const ref = useCallback((el: HTMLDivElement | null) => {
+    setNode(el);
+  }, []);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    if (!node) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true);
-          observer.unobserve(el);
+          observer.unobserve(node);
         }
       },
       { threshold: 0.1, ...options }
     );
-    observer.observe(el);
+    observer.observe(node);
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [node, options]);
 
   return { ref, inView };
 }
