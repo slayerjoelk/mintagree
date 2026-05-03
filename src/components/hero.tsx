@@ -98,7 +98,7 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className={`order-1 md:order-2 ${inView ? "animate-blur-in animate-blur-in-delay-1" : "opacity-0"}`}>
+          <div className={`order-1 md:order-2 h-[420px] md:h-[520px] w-full ${inView ? "animate-blur-in animate-blur-in-delay-1" : "opacity-0"}`}>
             <ReceiptScene />
           </div>
         </div>

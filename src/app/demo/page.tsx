@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Head from "next/head";
 
 const DIALOGUE = [
-  { spk: "Sarah", role: "Freelance Designer", voice: "en-US-AvaNeural", text: "Hey Mike, just to recap our call. We'll refresh the homepage and pricing pages, and tidy up the navigation." },
-  { spk: "Mike", role: "Startup Founder", voice: "en-US-AndrewNeural", text: "Sounds good. I'd love the first draft before next week's webinar if that's possible." },
-  { spk: "Sarah", role: "Freelance Designer", voice: "en-US-AvaNeural", text: "Absolutely. We'll include three rounds of revisions. Please send the brand assets by Friday so we can hit the ground running." },
-  { spk: "Mike", role: "Startup Founder", voice: "en-US-AndrewNeural", text: "Done. The budget at one thousand five hundred dollars is approved and ready to go." },
-  { spk: "Sarah", role: "Freelance Designer", voice: "en-US-AvaNeural", text: "Perfect. Let's target next Monday for the first milestone. I'll send a conversation receipt with a one-time code for sign-off." },
+  { spk: "Sarah", role: "Freelance Designer", audio: "/audio/demo/sarah-0.mp3", text: "Hey Mike, just to recap our call. We'll refresh the homepage and pricing pages, and tidy up the navigation." },
+  { spk: "Mike", role: "Startup Founder", audio: "/audio/demo/mike-0.mp3", text: "Sounds good. I'd love the first draft before next week's webinar if that's possible." },
+  { spk: "Sarah", role: "Freelance Designer", audio: "/audio/demo/sarah-1.mp3", text: "Absolutely. We'll include three rounds of revisions. Please send the brand assets by Friday so we can hit the ground running." },
+  { spk: "Mike", role: "Startup Founder", audio: "/audio/demo/mike-1.mp3", text: "Done. The budget at one thousand five hundred dollars is approved and ready to go." },
+  { spk: "Sarah", role: "Freelance Designer", audio: "/audio/demo/sarah-2.mp3", text: "Perfect. Let's target next Monday for the first milestone. I'll send a conversation receipt with a one-time code for sign-off." },
 ];
 
 export default function DemoPage() {
@@ -26,27 +26,24 @@ export default function DemoPage() {
   const [recState, setRecState] = useState("idle");
   const [transcript, setTranscript] = useState("");
   const [demoPlaying, setDemoPlaying] = useState(false);
-  const [otpInput, setOtpInput] = useState("");
-  const [audioCache, setAudioCache] = useState<Record<number, string>>({});
   const [activeLine, setActiveLine] = useState<number | null>(null);
-  const [generatingAudio, setGeneratingAudio] = useState(false);
+  const [otpInput, setOtpInput] = useState("");
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const recRef = useRef<any>(null);
   const mountedRef = useRef(true);
 
   useEffect(() => () => { mountedRef.current = false; }, []);
 
-  const randToken = useCallback((n = 24) => {
+  const randToken = (n = 24) => {
     const s = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let o = "";
     for (let i = 0; i < n; i++) o += s[Math.floor(Math.random() * s.length)];
     return o;
-  }, []);
+  };
 
-  const formatUSD = (n: string | number) =>
-    new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(n || 0));
+  const formatUSD = (n: string | number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(n || 0));
 
-  const bytesToDataUrl = (file: File): Promise<string> =>
-    new Promise((r) => { const fr = new FileReader(); fr.onload = () => r(fr.result as string); fr.readAsDataURL(file); });
+  const bytesToDataUrl = (file: File): Promise<string> => new Promise((r) => { const fr = new FileReader(); fr.onload = () => r(fr.result as string); fr.readAsDataURL(file); });
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
@@ -81,8 +78,8 @@ export default function DemoPage() {
     setClientView({
       ...receipt,
       token,
-      signUrl: `${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/sign/${token}?mode=sign`,
-      disputeUrl: `${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/sign/${token}?mode=dispute`,
+      signUrl: `${typeof window !== "undefined" ? window.location.origin : ""}/sign/${token}?mode=sign`,
+      disputeUrl: `${typeof window !== "undefined" ? window.location.origin : ""}/sign/${token}?mode=dispute`,
     });
   }, [subject, bullets.join("|"), amount, due, filePreview, requireOtp, otp]);
 
@@ -108,15 +105,12 @@ export default function DemoPage() {
 
   const stopRecording = () => { recRef.current?.stop(); recRef.current = null; setRecState("stopped"); };
 
-  const recRef = useRef<any>(null);
-
   const createReceipt = async () => {
     try {
       const res = await fetch("/api/receipts", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(receipt) });
       const data = await res.json();
       if (data.ok && clientView) {
-        const updated = { ...clientView, id: data.id };
-        setClientView(updated);
+        setClientView({ ...clientView, id: data.id });
         setRecState("created");
       }
     } catch { setRecState("error"); }
@@ -129,29 +123,12 @@ export default function DemoPage() {
     setScheduleAt("");
   };
 
-  const generateAudio = async () => {
-    setGeneratingAudio(true);
-    const cache: Record<number, string> = {};
-    for (let i = 0; i < DIALOGUE.length; i++) {
-      try {
-        const res = await fetch("/api/tts", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ text: DIALOGUE[i].text, voice: DIALOGUE[i].voice }) });
-        if (!res.ok) throw new Error("TTS failed");
-        const blob = await res.blob();
-        cache[i] = URL.createObjectURL(blob);
-      } catch { /* skip on failure */ }
-    }
-    if (mountedRef.current) { setAudioCache(cache); setGeneratingAudio(false); }
-  };
-
   const playDemo = async () => {
-    if (Object.keys(audioCache).length === 0) await generateAudio();
-    if (Object.keys(audioCache).length === 0) return;
     setDemoPlaying(true);
     for (let i = 0; i < DIALOGUE.length; i++) {
       if (!mountedRef.current) break;
-      if (!audioCache[i]) continue;
       setActiveLine(i);
-      const audio = new Audio(audioCache[i]);
+      const audio = new Audio(DIALOGUE[i].audio);
       audioRef.current = audio;
       await new Promise((r) => { audio.onended = r; audio.onerror = r; audio.play().catch(() => r(undefined)); });
       await new Promise((r) => setTimeout(r, 400));
@@ -195,14 +172,9 @@ export default function DemoPage() {
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-white">Conversation</h2>
               <div className="flex items-center gap-2">
-                {generatingAudio && (
-                  <span className="text-xs text-zinc-500 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" /> Generating voices…
-                  </span>
-                )}
                 {!demoPlaying ? (
-                  <button onClick={playDemo} disabled={generatingAudio} className="flex items-center gap-2 text-sm bg-teal-500 text-zinc-950 px-4 py-2 rounded-lg font-medium hover:bg-teal-400 transition-colors disabled:opacity-40">
-                    <PlayIcon /> {Object.keys(audioCache).length ? "Play again" : "Play human voices"}
+                  <button onClick={playDemo} className="flex items-center gap-2 text-sm bg-teal-500 text-zinc-950 px-4 py-2 rounded-lg font-medium hover:bg-teal-400 transition-colors">
+                    <PlayIcon /> Play human voices
                   </button>
                 ) : (
                   <button onClick={stopDemo} className="flex items-center gap-2 text-sm bg-zinc-800 text-zinc-100 px-4 py-2 rounded-lg font-medium hover:bg-zinc-700 transition-colors">
@@ -226,9 +198,9 @@ export default function DemoPage() {
                       <span className="text-xs text-zinc-600">{line.role}</span>
                       {activeLine === i && demoPlaying && (
                         <span className="flex items-center gap-0.5">
-                          <span className="w-1 h-3 bg-teal-400 rounded-full animate-[bounce_1s_infinite]" />
-                          <span className="w-1 h-3 bg-teal-400 rounded-full animate-[bounce_1.1s_infinite]" />
-                          <span className="w-1 h-3 bg-teal-400 rounded-full animate-[bounce_1.2s_infinite]" />
+                          {<span className="w-1 h-3 bg-teal-400 rounded-full animate-[bounce_1s_infinite]" />}
+                          {<span className="w-1 h-3 bg-teal-400 rounded-full animate-[bounce_1.1s_infinite]" />}
+                          {<span className="w-1 h-3 bg-teal-400 rounded-full animate-[bounce_1.2s_infinite]" />}
                         </span>
                       )}
                     </div>
