@@ -48,7 +48,7 @@ const features = [
     ),
     title: "Conversation receipts",
     description:
-      "After every call, generate a structured receipt with scope, deliverables, budget, and due dates. Clients see exactly what was agreed — nothing more, nothing less.",
+      "After every call or WhatsApp thread, generate a structured receipt with scope, deliverables, budget, and due dates. Clients see exactly what was agreed — nothing more, nothing less.",
   },
   {
     icon: (
@@ -87,13 +87,12 @@ const features = [
   {
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-        <path d="M12 6v6l4 2" />
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l2.9-5.6A8.38 8.38 0 0 1 5 11.5a8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
       </svg>
     ),
-    title: "Automated reminders",
+    title: "WhatsApp integration",
     description:
-      "Follow-ups sent before due dates. No more chasing clients. Receipts get signed on time, every time.",
+      "Clients text or voice-note you on WhatsApp? Turn those conversations into structured, AI-drafted receipts — same sign-off flow, zero friction.",
   },
 ];
 
@@ -122,7 +121,7 @@ export default function Features() {
         </h2>
         <p className="mt-3 text-zinc-400 max-w-xl mx-auto">
           Everything you need to turn verbal agreements into binding receipts —
-          without contracts, without complexity.
+          by email or WhatsApp, without contracts, without complexity.
         </p>
       </div>
 

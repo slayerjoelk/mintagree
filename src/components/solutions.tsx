@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useInView } from "@/hooks/use-in-view";
 
 const audiences = [
-  { id: "agencies", label: "Agencies", description: "Marketing, creative, and digital agencies. Confirm scope, budget, deliverables, and timelines after every client call with a single receipt.", accent: "#2dd4bf" },
-  { id: "consultants", label: "Consultants", description: "Summarize discovery calls into OTP-signed receipts. Stakeholders approve next steps the same day.", accent: "#60a5fa" },
-  { id: "freelancers", label: "Freelancers", description: "Turn voice notes into client approvals. Capture OTP sign-off on scope and revisions to eliminate scope creep.", accent: "#f472b6" },
+  { id: "agencies", label: "Agencies", description: "Marketing, creative, and digital agencies. Confirm scope, budget, deliverables, and timelines after every client call or WhatsApp thread with a single receipt.", accent: "#2dd4bf" },
+  { id: "consultants", label: "Consultants", description: "Summarize discovery calls and WhatsApp conversations into OTP-signed receipts. Stakeholders approve next steps the same day.", accent: "#60a5fa" },
+  { id: "freelancers", label: "Freelancers", description: "Turn voice notes and WhatsApp messages into client approvals. Capture OTP sign-off on scope and revisions to eliminate scope creep.", accent: "#f472b6" },
   { id: "smb", label: "SMBs", description: "Standardize post-call documentation across teams. Attach visuals, set due dates, and build a searchable paper trail.", accent: "#a78bfa" },
   { id: "msp", label: "MSPs & IT", description: "Confirm tickets, changes, and budgets via receipts your clients sign with a one-time code. Lower churn.", accent: "#34d399" },
   { id: "construction", label: "Construction", description: "Lightweight change-order receipts with photos, dates, and OTP. Field-ready, office-backed.", accent: "#fbbf24" },

@@ -53,7 +53,7 @@ export default function Hero() {
           <div className={`order-2 md:order-1 ${inView ? "animate-blur-in" : "opacity-0"}`}>
             <div className="inline-flex items-center gap-2 rounded-full border border-mint/20 bg-mint/5 px-3 py-1 text-xs text-mint mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-mint animate-pulse" />
-              Voice → Signed Agreement
+              Voice or WhatsApp → Signed Agreement
             </div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08] text-balance">
@@ -63,9 +63,9 @@ export default function Hero() {
             </h1>
 
             <p className="mt-6 text-base md:text-lg text-zinc-400 leading-relaxed max-w-lg">
-              Scope creep kills projects. MintAgree turns every client call into a
-              binding conversation receipt — scope, budget, due dates, and client
-              sign-off. No contracts. No confusion.
+              Scope creep kills projects. MintAgree turns every client call or WhatsApp
+              conversation into a binding receipt — scope, budget, due dates, and
+              client sign-off. No contracts. No confusion.
             </p>
 
             <div className="mt-8 flex items-center gap-3 flex-wrap">

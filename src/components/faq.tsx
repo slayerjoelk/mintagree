@@ -6,11 +6,15 @@ import { useInView } from "@/hooks/use-in-view";
 const faqs = [
   {
     q: "What is a conversation receipt?",
-    a: "A conversation receipt is a structured summary of what was agreed on a call — scope, deliverables, budget, and due dates — sent to the client for quick OTP acknowledgement. It's lighter than a contract but more binding than an email.",
+    a: "A conversation receipt is a structured summary of what was agreed on a call or WhatsApp conversation — scope, deliverables, budget, and due dates — sent to the client for quick OTP acknowledgement. It's lighter than a contract but more binding than an email.",
   },
   {
     q: "How does OTP sign-off work?",
-    a: "Your client receives a link to the receipt. They enter a one-time code displayed on the page. No accounts, no passwords, no downloads. The acknowledgment is timestamped and archived.",
+    a: "Your client receives a link to the receipt by email or WhatsApp. They enter a one-time code displayed on the page. No accounts, no passwords, no downloads. The acknowledgment is timestamped and archived.",
+  },
+  {
+    q: "Can I send receipts over WhatsApp?",
+    a: "Yes. Connect your WhatsApp Business line and clients can message you directly. MintAgree reads the conversation, drafts a receipt with AI, and sends it back over WhatsApp for OTP sign-off — all inside the same thread.",
   },
   {
     q: "Do I need a credit card?",
