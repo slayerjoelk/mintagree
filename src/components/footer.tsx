@@ -5,21 +5,21 @@ import { useState } from "react";
 
 const footerLinks = {
   Product: [
-    { label: "Features", href: "#features" },
+    { label: "Features", href: "/#features" },
     { label: "Pricing", href: "/pricing" },
     { label: "Live demo", href: "/demo" },
-    { label: "Changelog", href: "#" },
+    { label: "Changelog", href: "/#changelog" },
   ],
   Company: [
-    { label: "About", href: "#" },
-    { label: "Blog", href: "#blog" },
-    { label: "Careers", href: "#" },
+    { label: "About", href: "/about" },
+    { label: "Blog", href: "/blog" },
+    { label: "Careers", href: "/careers" },
     { label: "Contact", href: "mailto:support@mintagree.com" },
   ],
   Legal: [
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
-    { label: "Security", href: "#" },
+    { label: "Security", href: "/security" },
   ],
   Social: [
     { label: "Twitter / X", href: "https://x.com/mintagree" },
