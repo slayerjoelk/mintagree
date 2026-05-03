@@ -20,7 +20,8 @@ export function useInView(options?: IntersectionObserverInit) {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [options]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return { ref, inView };
 }
