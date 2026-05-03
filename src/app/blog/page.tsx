@@ -6,6 +6,7 @@ import CanvasBackground from "@/components/canvas-background";
 
 const posts = [
   {
+    slug: "scope-creep-agencies",
     title: "The $12,000 scope creep mistake every agency makes",
     excerpt: "How a single undocumented voice note turned into three extra rounds of revisions — and how to prevent it.",
     date: "May 2026",
@@ -13,6 +14,7 @@ const posts = [
     tag: "Agencies",
   },
   {
+    slug: "otp-vs-esignature",
     title: "Why OTP beats e-signature for client approvals",
     excerpt: "One-time codes remove login friction, cut approval time by 60%, and create the same binding record.",
     date: "April 2026",
@@ -20,6 +22,7 @@ const posts = [
     tag: "Product",
   },
   {
+    slug: "whatsapp-to-receipts",
     title: "Turning WhatsApp threads into signed receipts",
     excerpt: "The workflow that lets you document informal client conversations without losing speed or context.",
     date: "April 2026",
@@ -27,6 +30,7 @@ const posts = [
     tag: "Workflow",
   },
   {
+    slug: "verbal-yes-to-signed",
     title: "Sales teams: from verbal yes to signed commitment",
     excerpt: "How top-performing sales teams use conversation receipts to accelerate pipeline and reduce stalled deals.",
     date: "March 2026",
@@ -34,6 +38,7 @@ const posts = [
     tag: "Sales",
   },
   {
+    slug: "construction-change-orders",
     title: "Construction change orders without the paper chase",
     excerpt: "Field-ready receipt workflows that get client sign-off before you leave the site.",
     date: "March 2026",
@@ -41,6 +46,7 @@ const posts = [
     tag: "Construction",
   },
   {
+    slug: "built-in-90-days",
     title: "Why we built MintAgree in 90 days",
     excerpt: "The story behind shipping a full-stack SaaS with Next.js, SQLite, and a single developer.",
     date: "February 2026",
@@ -87,9 +93,10 @@ export default function BlogPage() {
         <section className="max-w-7xl mx-auto px-6 py-12 md:py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {posts.map((post) => (
-              <div
-                key={post.title}
-                className="relative rounded-xl border border-zinc-800 bg-surface p-6 hover:border-zinc-700 hover:bg-surface-raised hover:-translate-y-0.5 transition-all group cursor-default overflow-hidden"
+              <Link
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="relative rounded-xl border border-zinc-800 bg-surface p-6 hover:border-zinc-700 hover:bg-surface-raised hover:-translate-y-0.5 transition-all group cursor-pointer overflow-hidden block"
               >
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-xs font-medium text-mint bg-mint/10 px-2 py-0.5 rounded-full">{post.tag}</span>
@@ -98,7 +105,7 @@ export default function BlogPage() {
                 <h3 className="font-semibold text-white mb-2 group-hover:text-mint transition-colors">{post.title}</h3>
                 <p className="text-sm text-zinc-400 leading-relaxed mb-4">{post.excerpt}</p>
                 <div className="text-xs text-zinc-600">{post.readTime}</div>
-              </div>
+              </Link>
             ))}
           </div>
         </section>
