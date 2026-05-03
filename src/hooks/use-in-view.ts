@@ -1,34 +1,9 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef } from "react";
 
 export function useInView() {
   const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-
-    // Fallback: some browsers / SSR-hydration edge cases never fire the observer
-    const fallback = setTimeout(() => setInView(true), 1200);
-
-    return () => {
-      observer.disconnect();
-      clearTimeout(fallback);
-    };
-  }, []);
-
-  return { ref, inView };
+  // Always visible — no scroll observer, no hydration race conditions
+  return { ref, inView: true };
 }
