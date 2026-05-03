@@ -71,13 +71,13 @@ export default function Hero() {
               </Link>
             </div>
 
-            <div className="mt-8 flex items-center gap-6">
+            <div className="mt-8 flex items-center gap-8">
               {stats.map((s) => (
                 <div key={s.label}>
-                  <div className="text-xl font-semibold font-mono text-mint">
+                  <div className="text-2xl md:text-3xl font-bold font-mono text-white">
                     {s.value}
                   </div>
-                  <div className="text-xs text-zinc-500">{s.label}</div>
+                  <div className="text-xs text-zinc-400 mt-0.5">{s.label}</div>
                 </div>
               ))}
             </div>
@@ -91,10 +91,11 @@ export default function Hero() {
           >
             <div
               ref={cardRef}
-              className="relative w-full max-w-sm rounded-2xl border border-zinc-800 bg-surface p-6 shadow-lg transition-transform duration-75 ease-out"
+              className="relative w-full max-w-sm rounded-2xl border border-zinc-700/50 bg-surface p-6 shadow-2xl transition-transform duration-75 ease-out"
               style={{
                 transform,
                 transformStyle: "preserve-3d",
+                boxShadow: "0 0 0 1px rgba(45,212,191,0.1), 0 25px 50px -12px rgba(0,0,0,0.8), 0 0 60px rgba(45,212,191,0.08)",
               }}
             >
               {/* Receipt content */}
