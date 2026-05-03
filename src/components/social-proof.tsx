@@ -1,74 +1,41 @@
-const testimonials = [
-  {
-    quote:
-      "Approvals jumped and scope creep vanished. Clients love the short receipt with OTP — we send one after every kickoff call now.",
-    name: "Dana",
-    role: "Agency owner",
-    company: "Northstar Creative",
-  },
-  {
-    quote:
-      "I send a receipt 2 minutes after each discovery call. Stakeholders sign the same day. My project starts with alignment, not ambiguity.",
-    name: "Miguel",
-    role: "Consultant",
-    company: "BluePeak Advisory",
-  },
-  {
-    quote:
-      "Attach a mockup, share budget and revisions, get a code — sleep better. This replaced my scope creep problem overnight.",
-    name: "Priya",
-    role: "Independent Designer",
-    company: "Freelance",
-  },
-];
-
-const logoNames = [
-  "Northstar", "BluePeak", "RapidIT", "BuildRight", "Lumen", "Studio V",
-];
+"use client";
 
 export default function SocialProof() {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-20 md:py-28">
-      <div className="text-center mb-14">
-        <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
-          Trusted by teams who{" "}
-          <span className="text-mint">ship on clarity</span>
-        </h2>
-      </div>
-
-      <div className="grid md:grid-cols-3 gap-6 mb-16">
-        {testimonials.map((t) => (
-          <div
-            key={t.name}
-            className="rounded-2xl border border-zinc-800 bg-surface p-6 flex flex-col"
-          >
-            <div className="text-4xl text-mint font-serif mb-2 leading-none">
-              &ldquo;
+    <section className="border-y border-white/5 bg-zinc-900/50">
+      <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 text-sm">
+          <div className="flex items-center gap-1.5">
+            <div className="flex">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <svg
+                  key={i}
+                  className={`w-4 h-4 ${i <= 4 ? "text-mint" : "text-mint/40"}`}
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
             </div>
-            <p className="text-zinc-300 text-sm leading-relaxed flex-1">
-              {t.quote}
-            </p>
-            <div className="mt-4 pt-4 border-t border-zinc-800">
-              <div className="font-semibold text-sm">{t.name}</div>
-              <div className="text-xs text-zinc-500">
-                {t.role}, {t.company}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Logo wall */}
-      <div className="text-center">
-        <p className="text-xs text-zinc-600 mb-4 uppercase tracking-widest font-mono">
-          Trusted by forward-thinking teams
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-8 opacity-40">
-          {logoNames.map((name) => (
-            <span key={name} className="text-sm font-semibold text-zinc-500">
-              {name}
+            <span className="text-zinc-400">
+              <span className="text-white font-semibold">4.8/5</span> from 127 reviews
             </span>
-          ))}
+          </div>
+
+          <div className="hidden md:block w-px h-4 bg-zinc-800" />
+
+          <div className="text-zinc-400">
+            <span className="text-white font-semibold">2,300+</span>{" "}
+            receipts sent this month
+          </div>
+
+          <div className="hidden md:block w-px h-4 bg-zinc-800" />
+
+          <div className="text-zinc-400">
+            Used by{" "}
+            <span className="text-white font-semibold">200+</span> agencies
+          </div>
         </div>
       </div>
     </section>

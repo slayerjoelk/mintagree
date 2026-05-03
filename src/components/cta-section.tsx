@@ -1,34 +1,65 @@
+"use client";
+
 import Link from "next/link";
+import { useInView } from "@/hooks/use-in-view";
 
 export default function CTASection() {
-  return (
-    <section className="max-w-7xl mx-auto px-6 py-20 md:py-28">
-      <div className="relative rounded-3xl bg-gradient-to-br from-mint/10 via-mint/5 to-transparent border border-mint/20 p-10 md:p-16 text-center overflow-hidden">
-        {/* Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-mint/10 blur-[100px]" />
+  const { ref, inView } = useInView();
 
-        <div className="relative">
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-4">
-            Ready to mint your first agreement?
-          </h2>
-          <p className="text-zinc-400 mb-8 max-w-md mx-auto">
-            Send a conversation receipt in 90 seconds. No contracts. No credit
-            card required to start.
-          </p>
-          <div className="flex items-center justify-center gap-3">
-            <Link
-              href="/demo"
-              className="inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-medium bg-mint text-zinc-950 hover:bg-mint-hover transition-colors shadow-glow"
-            >
-              Try the live demo
-            </Link>
-            <Link
-              href="/pricing"
-              className="inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-medium border border-zinc-700 text-zinc-300 hover:border-zinc-600 transition-colors"
-            >
-              View pricing
-            </Link>
-          </div>
+  return (
+    <section
+      ref={ref}
+      className={`bg-gradient-to-b from-zinc-950 to-zinc-900 border-t border-white/5 py-20 md:py-28 ${
+        inView ? "animate-fade-in-up" : "opacity-0"
+      }`}
+    >
+      <div className="max-w-3xl mx-auto px-6 text-center">
+        <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          Stop losing money to{" "}
+          <span className="text-mint">scope creep</span>.
+        </h2>
+        <p className="text-lg text-zinc-400 mb-2">
+          Your first receipt is free. No credit card required.
+        </p>
+        <p className="text-sm text-zinc-500 mb-10">
+          Get your clients aligned before the project starts. Not after it
+          explodes.
+        </p>
+
+        <div className="flex items-center justify-center gap-3 flex-wrap">
+          <Link
+            href="/demo"
+            className="inline-flex items-center justify-center rounded-lg px-8 py-4 text-sm font-semibold bg-mint text-zinc-950 hover:bg-mint-hover transition-all shadow-glow hover:scale-[1.02] active:scale-[0.98]"
+          >
+            Start free
+          </Link>
+          <Link
+            href="/demo"
+            className="inline-flex items-center justify-center rounded-lg px-6 py-3.5 text-sm font-medium border border-zinc-700 text-zinc-300 hover:border-zinc-600 hover:text-white transition-colors"
+          >
+            Book a 15-min demo
+          </Link>
+        </div>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-5 text-xs text-zinc-600">
+          <span className="flex items-center gap-1.5">
+            <svg className="w-3.5 h-3.5 text-zinc-500" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            SOC 2 Type II in progress
+          </span>
+          <span className="flex items-center gap-1.5">
+            <svg className="w-3.5 h-3.5 text-zinc-500" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            99.9% uptime
+          </span>
+          <span className="flex items-center gap-1.5">
+            <svg className="w-3.5 h-3.5 text-zinc-500" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            End-to-end encrypted
+          </span>
         </div>
       </div>
     </section>

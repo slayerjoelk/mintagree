@@ -1,3 +1,7 @@
+"use client";
+
+import { useInView } from "@/hooks/use-in-view";
+
 const features = [
   {
     large: true,
@@ -47,13 +51,38 @@ const features = [
     description:
       "Attach screenshots, mockups, and reference files. Schedule delivery and keep everything in one thread.",
   },
+  {
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+        <path d="M12 6v6l4 2" />
+      </svg>
+    ),
+    title: "Automated reminders",
+    description:
+      "Follow-ups sent before due dates. No more chasing clients. Receipts get signed on time, every time.",
+  },
+];
+
+const delayClasses = [
+  "animate-fade-in-up",
+  "animate-fade-in-up animate-fade-in-up-delay-1",
+  "animate-fade-in-up animate-fade-in-up-delay-2",
+  "animate-fade-in-up animate-fade-in-up-delay-3",
+  "animate-fade-in-up animate-fade-in-up-delay-4",
 ];
 
 export default function Features() {
+  const { ref, inView } = useInView();
+
   return (
-    <section id="features" className="max-w-7xl mx-auto px-6 py-20 md:py-28">
+    <section
+      ref={ref}
+      id="features"
+      className="max-w-7xl mx-auto px-6 py-20 md:py-28"
+    >
       <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
           Built to close the gap between{" "}
           <span className="text-mint">spoken</span> and{" "}
           <span className="text-mint">signed</span>
@@ -69,7 +98,9 @@ export default function Features() {
           f.large ? (
             <div
               key={i}
-              className="md:col-span-2 md:row-span-2 rounded-2xl border border-zinc-800 bg-surface p-6 md:p-8 flex flex-col justify-between group hover:border-zinc-700 transition-colors"
+              className={`md:col-span-2 md:row-span-2 rounded-2xl border border-zinc-800 bg-surface p-6 md:p-8 flex flex-col justify-between group hover:border-zinc-700 hover:-translate-y-1 hover:shadow-lg transition-all ${
+                inView ? "animate-fade-in-up" : "opacity-0"
+              }`}
             >
               <div>
                 <div className="w-10 h-10 rounded-xl bg-mint/10 border border-mint/20 flex items-center justify-center text-mint mb-4">
@@ -80,17 +111,18 @@ export default function Features() {
                   {f.description}
                 </p>
               </div>
-              {/* Decorative code line */}
-              <div className="mt-6 p-3 rounded-lg bg-surface-raised font-mono text-xs text-zinc-600 overflow-hidden">
+              <div className="mt-6 p-3 rounded-lg bg-surface-raised font-mono text-xs text-zinc-500 overflow-hidden border border-zinc-800 group-hover:border-zinc-700 transition-colors">
                 <span className="text-zinc-500">POST</span>{" "}
-                <span className="text-mint">/receipts</span>{" "}
+                <span className="text-mint">/v1/receipts</span>{" "}
                 <span className="text-zinc-600">{`{ "scope", "budget" }`}</span>
               </div>
             </div>
           ) : (
             <div
               key={i}
-              className="rounded-2xl border border-zinc-800 bg-surface p-5 group hover:border-zinc-700 hover:bg-surface-raised/50 transition-all"
+              className={`rounded-2xl border border-zinc-800 bg-surface p-5 group hover:border-zinc-700 hover:-translate-y-1 hover:shadow-md hover:bg-gradient-to-b hover:from-transparent hover:to-mint/5 transition-all ${
+                inView ? delayClasses[i] || "animate-fade-in-up" : "opacity-0"
+              }`}
             >
               <div className="w-9 h-9 rounded-lg bg-mint/10 border border-mint/20 flex items-center justify-center text-mint mb-3">
                 {f.icon}

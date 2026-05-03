@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useInView } from "@/hooks/use-in-view";
 
 const faqs = [
   {
@@ -10,6 +11,14 @@ const faqs = [
   {
     q: "How does OTP sign-off work?",
     a: "Your client receives a link to the receipt. They enter a one-time code displayed on the page. No accounts, no passwords, no downloads. The acknowledgment is timestamped and archived.",
+  },
+  {
+    q: "Do I need a credit card?",
+    a: "No. Start on the Free plan with no credit card. Upgrade when you need more receipts or seats.",
+  },
+  {
+    q: "Can I switch plans?",
+    a: "Yes. Upgrade or downgrade anytime. If you downgrade, your existing receipts stay accessible. If you upgrade, you immediately unlock new features.",
   },
   {
     q: "Is this legally binding?",
@@ -31,21 +40,22 @@ const faqs = [
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const { ref, inView } = useInView();
 
   return (
-    <section id="faq" className="max-w-3xl mx-auto px-6 py-20 md:py-28">
-      <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-center mb-12">
+    <section ref={ref} id="faq" className="max-w-3xl mx-auto px-6 py-20 md:py-28">
+      <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-center mb-12">
         Frequently asked{" "}
         <span className="text-mint">questions</span>
       </h2>
 
-      <div className="space-y-3">
+      <div className={`space-y-3 ${inView ? "animate-fade-in-up" : "opacity-0"}`}>
         {faqs.map((f, i) => {
           const isOpen = openIndex === i;
           return (
             <div
               key={i}
-              className="rounded-xl border border-zinc-800 bg-surface overflow-hidden"
+              className="rounded-xl border border-zinc-800 bg-surface overflow-hidden hover:border-zinc-700 transition-colors"
             >
               <button
                 className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 text-sm font-medium hover:text-mint transition-colors"
