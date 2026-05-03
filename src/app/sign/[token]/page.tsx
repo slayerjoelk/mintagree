@@ -11,6 +11,7 @@ interface Receipt {
   dueDate: string | null;
   requireOtp: boolean;
   status: string;
+  channel: string;
   createdAt: string;
 }
 
@@ -112,6 +113,8 @@ export default function SignPage({ params }: { params: { token: string } }) {
 
   const r = receipt!;
   const alreadyDone = r.status === "signed" || r.status === "disputed";
+  const isWhatsApp = r.channel === "whatsapp";
+  const isEmail = r.channel === "email" || !r.channel;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white py-12 px-4">
@@ -123,7 +126,7 @@ export default function SignPage({ params }: { params: { token: string } }) {
             <span className="font-semibold text-lg">AgreeMint</span>
           </div>
           <p className="text-slate-500 text-sm">
-            Voice agreement & client sign-off
+            Voice agreement &amp; client sign-off
           </p>
         </div>
 
@@ -131,17 +134,40 @@ export default function SignPage({ params }: { params: { token: string } }) {
         <div className="rounded-2xl border bg-white p-6 shadow-sm">
           <div className="flex items-start justify-between mb-4">
             <h2 className="text-xl font-semibold">{r.subject}</h2>
-            {alreadyDone && (
-              <span
-                className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                  r.status === "signed"
-                    ? "bg-emerald-100 text-emerald-700"
-                    : "bg-red-100 text-red-700"
-                }`}
-              >
-                {r.status}
-              </span>
-            )}
+            <div className="flex gap-1.5">
+              {/* Channel badge */}
+              {isWhatsApp ? (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">
+                  💬 WhatsApp
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                  📧 Email
+                </span>
+              )}
+              {alreadyDone && (
+                <span
+                  className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
+                    r.status === "signed"
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-red-100 text-red-700"
+                  }`}
+                >
+                  {r.status}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Channel notice */}
+          <div className={`text-xs mb-4 p-2 rounded-lg ${
+            isWhatsApp
+              ? "bg-green-50 text-green-700 border border-green-100"
+              : "bg-blue-50 text-blue-700 border border-blue-100"
+          }`}>
+            {isWhatsApp
+              ? "This agreement was drafted from your WhatsApp conversation and sent for confirmation."
+              : "This agreement was sent to your email for confirmation."}
           </div>
 
           <ul className="list-disc pl-5 space-y-1 mb-4">
@@ -200,7 +226,9 @@ export default function SignPage({ params }: { params: { token: string } }) {
                     maxLength={6}
                   />
                   <p className="text-xs text-slate-500 mt-1">
-                    Enter the 6-digit code from the email you received
+                    {isWhatsApp
+                      ? "Enter the 6-digit code sent to you via WhatsApp or email"
+                      : "Enter the 6-digit code from the email you received"}
                   </p>
                 </div>
               )}

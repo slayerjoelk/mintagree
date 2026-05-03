@@ -47,6 +47,7 @@ export async function GET(
       dueDate: receipt.dueDate,
       requireOtp: receipt.requireOtp,
       status: receipt.status,
+      channel: receipt.channel,
       createdAt: receipt.createdAt,
     },
   });
