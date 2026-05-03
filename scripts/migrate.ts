@@ -89,6 +89,10 @@ const migrations: Migration[] = [
     id: "2025-01-15-create-messages-index",
     sql: `CREATE INDEX IF NOT EXISTS idx_messages_thread ON messages(thread_id);`,
   },
+  {
+    id: "2025-01-15-add-conversation-threads-subject",
+    sql: `ALTER TABLE conversation_threads ADD COLUMN subject TEXT;`,
+  },
 ];
 
 // Simple migration tracking table
