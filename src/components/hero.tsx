@@ -87,7 +87,7 @@ export default function Hero() {
             </div>
 
             <div className={`mt-10 ${inView ? "animate-blur-in animate-blur-in-delay-2" : "opacity-0"}`}>
-              <p className="text-xs text-zinc-500 mb-3 uppercase tracking-wider font-medium">Trusted by 200+ agencies</p>
+              <p className="text-xs text-zinc-500 mb-3 uppercase tracking-wider font-medium">Early access — join the beta</p>
               <div className="flex flex-wrap items-center gap-5">
                 {logos.map((name) => (
                   <span key={name} className="text-sm text-zinc-500 font-medium opacity-60 hover:opacity-100 transition-opacity">

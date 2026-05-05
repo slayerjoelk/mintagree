@@ -2,22 +2,25 @@ import Link from "next/link";
 
 const posts = [
   {
-    title: "What is a conversation receipt? The freelancer's post-call secret weapon",
-    date: "May 3, 2026",
-    slug: "what-is-a-conversation-receipt",
-    excerpt: "Stop sending long emails after client calls. Here's why conversation receipts close the gap between spoken and signed.",
+    title: "The $12,000 scope creep mistake every agency makes",
+    date: "May 2, 2026",
+    slug: "scope-creep-agencies",
+    excerpt:
+      "How a single undocumented voice note turned into three extra rounds of revisions — and how to prevent it.",
   },
   {
-    title: "How to confirm scope after a client call (without sounding legal)",
-    date: "May 1, 2026",
-    slug: "confirm-scope-after-client-call",
-    excerpt: "The words you use matter. Here's the exact language that gets clients to acknowledge scope without triggering their lawyer instinct.",
-  },
-  {
-    title: "Client sign-off tools: why PDF contracts are killing your cash flow",
+    title: "Why OTP beats e-signature for client approvals",
     date: "April 28, 2026",
-    slug: "client-sign-off-tools-vs-pdf-contracts",
-    excerpt: "Average PDF contract turnaround: 4.7 days. Average receipt sign-off: 2 minutes. The math is brutal.",
+    slug: "otp-vs-esignature",
+    excerpt:
+      "One-time codes remove login friction, cut approval time by 60%, and create the same binding record.",
+  },
+  {
+    title: "Turning WhatsApp threads into signed receipts",
+    date: "April 25, 2026",
+    slug: "whatsapp-to-receipts",
+    excerpt:
+      "The workflow that lets you document informal client conversations without losing speed or context.",
   },
 ];
 
@@ -34,7 +37,7 @@ export default function BlogTeaser() {
           </p>
         </div>
         <Link
-          href="#blog"
+          href="/blog"
           className="hidden md:block text-sm text-mint hover:text-mint-hover transition-colors"
         >
           View all posts →

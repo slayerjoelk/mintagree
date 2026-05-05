@@ -1,0 +1,75 @@
+▲ Next.js 16.2.4 (Turbopack)
+- Environments: .env
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 5.0s
+  Running TypeScript ...
+  Finished TypeScript in 4.1s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/45) ...
+  Generating static pages using 7 workers (11/45) 
+  Generating static pages using 7 workers (22/45) 
+  Generating static pages using 7 workers (33/45) 
+✓ Generating static pages using 7 workers (45/45) in 272ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ƒ /analytics
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/chats
+├ ƒ /api/chats/[threadId]
+├ ƒ /api/chats/[threadId]/draft
+├ ƒ /api/chats/[threadId]/send
+├ ƒ /api/clients
+├ ƒ /api/payfast/subscribe
+├ ƒ /api/receipts
+├ ƒ /api/receipts/[id]
+├ ƒ /api/sign/[token]
+├ ƒ /api/templates
+├ ƒ /api/templates/[id]
+├ ƒ /api/tts
+├ ƒ /api/upload
+├ ƒ /api/webhooks/twilio
+├ ƒ /api/webhooks/twilio/status
+├ ○ /blog
+├ ● /blog/[slug]
+│ ├ /blog/scope-creep-agencies
+│ ├ /blog/otp-vs-esignature
+│ ├ /blog/whatsapp-to-receipts
+│ └ [+3 more paths]
+├ ○ /careers
+├ ƒ /chats
+├ ƒ /chats/[threadId]
+├ ƒ /clients
+├ ○ /demo
+├ ƒ /login
+├ ○ /pricing
+├ ○ /privacy
+├ ƒ /receipts
+├ ƒ /receipts/[id]
+├ ƒ /receipts/new
+├ ƒ /register
+├ ○ /security
+├ ƒ /settings
+├ ƒ /sign/[token]
+├ ● /solutions/[id]
+│ ├ /solutions/agencies
+│ ├ /solutions/consultants
+│ ├ /solutions/freelancers
+│ └ [+6 more paths]
+├ ƒ /templates
+├ ƒ /templates/new
+├ ○ /terms
+└ ○ /verify
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

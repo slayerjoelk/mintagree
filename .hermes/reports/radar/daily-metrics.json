@@ -1,5 +1,5 @@
 {
-  "date": "2026-05-03",
+  "date": "2026-05-04",
   "signups": 0,
   "receipts_created": 0,
   "receipts_signed": 0,
@@ -7,5 +7,5 @@
   "revenue_zar": 0,
   "uptime_pct": 0,
   "errors_5xx": 0,
-  "notes": "Pre-launch baseline. Database empty (no tables yet). Site not live (DNS unresolved)."
+  "notes": "Pre-launch. DNS unresolved. Vercel deployment (agreemint-nine.vercel.app) SSO-locked. No production DB access. Health-check curl blocked by local security scan (.app TLD false positive). Competitor pricing stable. SEO/AEO checks blocked by search engine CAPTCHAs."
 }

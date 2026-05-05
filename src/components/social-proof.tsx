@@ -19,22 +19,20 @@ export default function SocialProof() {
               ))}
             </div>
             <span className="text-zinc-400">
-              <span className="text-white font-semibold">4.8/5</span> from 127 reviews
+              Early access — join the beta
             </span>
           </div>
 
           <div className="hidden md:block w-px h-4 bg-zinc-800" />
 
           <div className="text-zinc-400">
-            <span className="text-white font-semibold">2,300+</span>{" "}
-            receipts sent this month
+            Fast scope confirmation for agencies & freelancers
           </div>
 
           <div className="hidden md:block w-px h-4 bg-zinc-800" />
 
           <div className="text-zinc-400">
-            Used by{" "}
-            <span className="text-white font-semibold">200+</span> agencies
+            Built in South Africa 🇿🇦
           </div>
         </div>
       </div>
