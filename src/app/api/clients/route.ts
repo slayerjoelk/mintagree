@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { clients } from "@/lib/db/schema";
+import { clients, receipts } from "@/lib/db/schema";
 import { clientSchema } from "@/lib/validations";
 import { eq, desc, and } from "drizzle-orm";
 
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-    const [existing] = await db
+  const [existing] = await db
     .select({ id: clients.id })
     .from(clients)
     .where(and(eq(clients.userId, session.user.id), eq(clients.email, parsed.data.email)))

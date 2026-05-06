@@ -63,13 +63,21 @@ export default async function ReceiptDetailPage({
       <div className="rounded-2xl border bg-white p-6 shadow-sm">
         <div className="flex items-start justify-between mb-4">
           <h2 className="text-2xl font-semibold">{receipt.subject}</h2>
-          <span
-            className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-              statusColors[receipt.status || "draft"] || statusColors.draft
-            }`}
-          >
-            {receipt.status}
-          </span>
+          <div className="flex items-center gap-2">
+            <span
+              className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
+                statusColors[receipt.status || "draft"] || statusColors.draft
+              }`}
+            >
+              {receipt.status}
+            </span>
+            <Link
+              href={`/dashboard/receipts/${receipt.id}/edit`}
+              className="rounded-lg border px-3 py-1 text-xs bg-white hover:bg-slate-50"
+            >
+              Edit
+            </Link>
+          </div>
         </div>
 
         <ul className="list-disc pl-5 space-y-1 mb-4">

@@ -61,7 +61,7 @@ export async function storeInboundMessage(params: {
   const userId = matchedClient?.userId ?? "unclaimed";
 
   // Upsert conversation thread
-  let thread = await db
+  const [existingThread] = await db
     .select()
     .from(conversationThreads)
     .where(
@@ -71,7 +71,9 @@ export async function storeInboundMessage(params: {
         eq(conversationThreads.source, "whatsapp")
       )
     )
-    .get();
+    .limit(1);
+
+  let thread = existingThread;
 
   if (!thread) {
     const newThreadId = createId();
@@ -108,7 +110,7 @@ export async function storeInboundMessage(params: {
       .set({
         messageCount: (thread.messageCount ?? 0) + 1,
         lastMessageAt: new Date(),
-        status: "needs_attention",
+        status: "pending_review",
         updatedAt: new Date(),
       })
       .where(eq(conversationThreads.id, thread.id));
@@ -155,7 +157,7 @@ export async function resolveUserByWhatsAppNumber(
 ): Promise<{ userId: string; twilioNumber: string } | null> {
   // MVP: every user shares one Twilio number
   // V2: user_settings table with per-user Twilio numbers
-  const user = await db.select().from(users).limit(1).get();
+  const [user] = await db.select().from(users).limit(1);
   if (!user) return null;
   return { userId: user.id, twilioNumber: toNumber };
 }

@@ -1,13 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 export default function NewReceiptPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const templateId = searchParams.get("templateId");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [limitStatus, setLimitStatus] = useState<{
+    allowed: boolean;
+    plan: string;
+    limit: number | null;
+    used: number;
+  } | null>(null);
 
   const [subject, setSubject] = useState("Client conversation receipt");
   const [bullets, setBullets] = useState(["Confirm project scope", "3 rounds of revisions", "Brand assets due Friday"]);
@@ -16,6 +25,32 @@ export default function NewReceiptPage() {
   const [clientEmail, setClientEmail] = useState("");
   const [clientName, setClientName] = useState("");
   const [requireOtp, setRequireOtp] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/me/plan")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.limitStatus) setLimitStatus(d.limitStatus);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!templateId) return;
+    let cancelled = false;
+    fetch(`/api/templates/${templateId}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (cancelled) return;
+        const t = d.template;
+        if (!t) return;
+        if (t.subject) setSubject(t.subject);
+        if (t.bullets?.length) setBullets(t.bullets);
+        if (t.amount) setAmount(String(t.amount));
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [templateId]);
 
   function addBullet() {
     setBullets([...bullets, ""]);
@@ -85,6 +120,17 @@ export default function NewReceiptPage() {
         </Link>
         <h2 className="text-2xl font-semibold mt-1">New conversation receipt</h2>
       </div>
+
+      {limitStatus && !limitStatus.allowed && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 mb-4 text-sm text-amber-800">
+          <p className="font-medium mb-1">Monthly receipt limit reached</p>
+          <p className="text-amber-700">
+            You&apos;ve used {limitStatus.used} of {limitStatus.limit} receipts on your{" "}
+            {limitStatus.plan} plan.{" "}
+            <a href="/dashboard/settings/billing" className="underline">Upgrade</a> to create more.
+          </p>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="rounded-2xl border bg-white p-6 shadow-sm space-y-4">
         <div>

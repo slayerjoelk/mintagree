@@ -5,6 +5,7 @@ import { receipts, clients } from "@/lib/db/schema";
 import { receiptSchema } from "@/lib/validations";
 import { generateOtp, generateToken } from "@/lib/otp";
 import { sendReceiptEmail } from "@/lib/email";
+import { checkReceiptLimit } from "@/lib/plans";
 import { eq, desc, and } from "drizzle-orm";
 
 // POST /api/receipts — Create receipt
@@ -12,6 +13,19 @@ export async function POST(req: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const limitCheck = await checkReceiptLimit(session.user.id);
+  if (!limitCheck.allowed) {
+    return NextResponse.json(
+      {
+        error: "Monthly receipt limit reached",
+        plan: limitCheck.plan,
+        limit: limitCheck.limit,
+        used: limitCheck.used,
+      },
+      { status: 403 }
+    );
   }
 
   const body = await req.json();
