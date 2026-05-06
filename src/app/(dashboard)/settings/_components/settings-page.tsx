@@ -10,6 +10,7 @@ interface SettingsPageProps {
     email?: string | null;
     name?: string | null;
     plan?: string | null;
+    webhookUrl?: string | null;
   } | null;
 }
 
@@ -22,9 +23,31 @@ const PLAN_LABELS: Record<string, string> = {
 export default function SettingsPage({ user }: SettingsPageProps) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
+  const [webhookUrl, setWebhookUrl] = useState(user?.webhookUrl || "");
+  const [savingWebhook, setSavingWebhook] = useState(false);
+  const [webhookMsg, setWebhookMsg] = useState("");
 
   const planKey = user?.plan;
   const planLabel = planKey ? (PLAN_LABELS[planKey] ?? planKey) : "Free";
+
+  async function saveWebhook(e: React.FormEvent) {
+    e.preventDefault();
+    setSavingWebhook(true);
+    setWebhookMsg("");
+    try {
+      const res = await fetch("/api/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ webhookUrl: webhookUrl.trim() || null }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setWebhookMsg("Saved.");
+    } catch {
+      setWebhookMsg("Failed to save.");
+    } finally {
+      setSavingWebhook(false);
+    }
+  }
 
   async function handleDeleteAccount() {
     if (!confirm("Are you sure? This permanently deletes all your receipts, clients, and templates.")) return;
@@ -64,6 +87,32 @@ export default function SettingsPage({ user }: SettingsPageProps) {
               </Link>
             </div>
           </div>
+        </div>
+
+        <div className="border-t pt-6">
+          <h3 className="font-semibold mb-1">CRM Webhook</h3>
+          <p className="text-sm text-slate-600 mb-3">
+            Send a JSON payload to your Zapier / Make / CRM whenever a client signs a receipt.
+          </p>
+          <form onSubmit={saveWebhook} className="flex gap-2 items-start">
+            <input
+              type="url"
+              value={webhookUrl}
+              onChange={(e) => setWebhookUrl(e.target.value)}
+              placeholder="https://hooks.zapier.com/hooks/catch/..."
+              className="flex-1 rounded-xl border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+            <button
+              type="submit"
+              disabled={savingWebhook}
+              className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+            >
+              {savingWebhook ? "Saving..." : "Save"}
+            </button>
+          </form>
+          {webhookMsg && (
+            <p className="mt-2 text-xs text-slate-500">{webhookMsg}</p>
+          )}
         </div>
 
         <div className="border-t pt-6">

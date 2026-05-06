@@ -9,6 +9,7 @@ export const users = sqliteTable("users", {
   name: text("name"),
   company: text("company"),
   plan: text("plan").default("free"), // free | starter | pro | enterprise
+  webhookUrl: text("webhook_url"), // CRM / Zapier outbound webhook
   emailVerified: integer("email_verified", { mode: "boolean" }).default(false),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()

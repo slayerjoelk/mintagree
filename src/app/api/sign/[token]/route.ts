@@ -4,7 +4,8 @@ import { receipts, signatures, users } from "@/lib/db/schema";
 import { verifyOtp } from "@/lib/otp";
 import { signSchema } from "@/lib/validations";
 import { sendReceiptSignedNotification } from "@/lib/email";
-import { eq } from "drizzle-orm";
+import { maybeFireReceiptWebhook } from "@/lib/webhooks";
+import { eq, desc } from "drizzle-orm";
 
 const otpAttempts = new Map<string, { count: number; lastAttempt: number }>();
 const MAX_ATTEMPTS = 5;
@@ -151,6 +152,18 @@ export async function POST(
       );
     }
   });
+
+  // Fire CRM webhook (non-blocking, outside transaction)
+  const [latestSig] = await db
+    .select({ id: signatures.id })
+    .from(signatures)
+    .where(eq(signatures.receiptId, receipt.id))
+    .orderBy(desc(signatures.createdAt))
+    .limit(1);
+
+  if (latestSig) {
+    maybeFireReceiptWebhook(receipt.id, latestSig.id).catch(() => {});
+  }
 
   return NextResponse.json({
     success: true,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -25,6 +25,10 @@ export default function NewReceiptPage() {
   const [clientEmail, setClientEmail] = useState("");
   const [clientName, setClientName] = useState("");
   const [requireOtp, setRequireOtp] = useState(true);
+  const [audioLoading, setAudioLoading] = useState(false);
+  const [audioError, setAudioError] = useState("");
+  const [audioStatus, setAudioStatus] = useState<"idle" | "uploading" | "extracting" | "done">("idle");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetch("/api/me/plan")
@@ -64,6 +68,71 @@ export default function NewReceiptPage() {
 
   function removeBullet(index: number) {
     setBullets(bullets.filter((_, i) => i !== index));
+  }
+
+  async function handleAudioUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAudioError("");
+    setAudioStatus("uploading");
+    setAudioLoading(true);
+
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+
+      // Step 1: Transcribe
+      const transcribeRes = await fetch("/api/transcribe", { method: "POST", body: fd });
+      const transcribeData = await transcribeRes.json();
+      if (!transcribeRes.ok) {
+        setAudioError(transcribeData.error || "Transcription failed");
+        setAudioStatus("idle");
+        setAudioLoading(false);
+        return;
+      }
+
+      const transcript = transcribeData.transcript;
+      if (!transcript) {
+        setAudioError("No speech detected in audio file.");
+        setAudioStatus("idle");
+        setAudioLoading(false);
+        return;
+      }
+
+      setAudioStatus("extracting");
+
+      // Step 2: Extract structured data
+      const extractRes = await fetch("/api/extract", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ transcript }),
+      });
+      const extracted = await extractRes.json();
+      if (!extractRes.ok) {
+        setAudioError(extracted.error || "AI extraction failed");
+        setAudioStatus("idle");
+        setAudioLoading(false);
+        return;
+      }
+
+      if (extracted.subject) setSubject(extracted.subject);
+      if (Array.isArray(extracted.bullets) && extracted.bullets.length > 0) {
+        setBullets(extracted.bullets);
+      }
+      if (extracted.amount) setAmount(String(extracted.amount));
+      if (extracted.currency && extracted.currency !== "USD") setAmount(String(extracted.amount));
+      if (extracted.dueDate) setDueDate(extracted.dueDate);
+      if (extracted.clientName) setClientName(extracted.clientName);
+      if (extracted.clientEmail) setClientEmail(extracted.clientEmail);
+
+      setAudioStatus("done");
+    } catch (err: any) {
+      setAudioError(err?.message || "Upload failed");
+      setAudioStatus("idle");
+    } finally {
+      setAudioLoading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -133,6 +202,34 @@ export default function NewReceiptPage() {
       )}
 
       <form onSubmit={handleSubmit} className="rounded-2xl border bg-white p-6 shadow-sm space-y-4">
+        {/* Audio Upload */}
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <label className="block text-sm font-medium mb-2">Upload call recording</label>
+          <p className="text-xs text-slate-500 mb-2">Supported: MP3, WAV, M4A, OGG. Max 25 MB.</p>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="audio/*"
+            onChange={handleAudioUpload}
+            disabled={audioLoading}
+            className="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 disabled:opacity-50"
+          />
+          {audioLoading && (
+            <div className="mt-2 text-xs text-slate-500 flex items-center gap-2">
+              <span className="inline-block w-3 h-3 border-2 border-slate-200 border-t-emerald-600 rounded-full animate-spin" />
+              {audioStatus === "uploading" && "Transcribing audio…"}
+              {audioStatus === "extracting" && "Extracting agreement points…"}
+              {audioStatus === "done" && "Done ✓"}
+            </div>
+          )}
+          {audioError && (
+            <div className="mt-2 text-xs text-red-600">{audioError}</div>
+          )}
+          {audioStatus === "done" && !audioError && (
+            <div className="mt-2 text-xs text-emerald-600 font-medium">Receipt pre-filled from audio. Review & send.</div>
+          )}
+        </div>
+
         <div>
           <label className="block text-sm font-medium mb-1">Subject</label>
           <input
