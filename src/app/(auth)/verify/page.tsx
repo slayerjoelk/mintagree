@@ -4,7 +4,7 @@ export default function VerifyPage() {
       <div className="w-full max-w-md mx-auto px-6 text-center">
         <div className="inline-flex items-center gap-2 mb-4">
           <span className="w-2 h-2 rounded-full bg-emerald-600" />
-          <span className="font-semibold">AgreeMint</span>
+          <span className="font-semibold">MintAgree</span>
         </div>
         <h1 className="text-2xl font-semibold mb-2">Check your email</h1>
         <p className="text-slate-600">

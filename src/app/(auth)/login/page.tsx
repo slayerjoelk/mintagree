@@ -19,7 +19,7 @@ export default async function LoginPage({
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-2">
             <span className="w-2 h-2 rounded-full bg-emerald-600" />
-            <span className="font-semibold">AgreeMint</span>
+            <span className="font-semibold">MintAgree</span>
           </div>
           <h1 className="text-2xl font-semibold">Sign in</h1>
           <p className="text-slate-600 mt-1">
@@ -61,7 +61,7 @@ export default async function LoginPage({
 
         <div className="text-center mt-6">
           <Link href="/" className="text-sm text-slate-500 hover:text-slate-700">
-            ← Back to AgreeMint
+            ← Back to MintAgree
           </Link>
         </div>
       </div>
