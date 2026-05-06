@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Page Not Found — AgreeMint",
+  title: "Page Not Found — MintAgree",
 };
 
 export default function GlobalNotFound() {

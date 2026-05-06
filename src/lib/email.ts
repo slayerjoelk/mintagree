@@ -90,7 +90,7 @@ export async function sendReceiptSignedNotification(
         <p>${name} has <strong>${verb}</strong> the receipt &ldquo;${safeSubject}&rdquo;.</p>
         ${action === "disputed" ? '<p style="color:#dc2626">Action required — follow up with your client to resolve the dispute.</p>' : '<p>The agreement is now confirmed. ✅</p>'}
         <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0" />
-        <p style="font-size:12px;color:#9ca3af">Sent by AgreeMint — voice agreement &amp; client sign-off software</p>
+        <p style="font-size:12px;color:#9ca3af">Sent by MintAgree — voice agreement &amp; client sign-off software</p>
       </div>`,
     });
     if (error) return { success: false, error: error instanceof Error ? error.message : (error as {message?: string}).message ?? String(error) };
@@ -107,9 +107,9 @@ function magicLinkTemplate(url: string): string {
     <div style="font-family:sans-serif;max-width:500px;margin:0 auto">
       <div style="text-align:center;padding:20px 0">
         <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#059669;margin-right:6px"></span>
-        <strong>AgreeMint</strong>
+        <strong>MintAgree</strong>
       </div>
-      <h2>Sign in to AgreeMint</h2>
+      <h2>Sign in to MintAgree</h2>
       <p>Click the button below to sign in. This link expires in 10 minutes and can only be used once.</p>
       <a href="${url}" style="display:inline-block;background:#059669;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;margin:16px 0">Sign in</a>
       <p style="font-size:12px;color:#9ca3af">If you didn't request this, you can safely ignore this email.</p>
@@ -141,7 +141,7 @@ function receiptEmailTemplate(args: {
     <div style="font-family:sans-serif;max-width:500px;margin:0 auto">
       <div style="text-align:center;padding:20px 0;border-bottom:1px solid #e5e7eb">
         <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#059669;margin-right:6px"></span>
-        <strong>AgreeMint</strong>
+        <strong>MintAgree</strong>
       </div>
       <h2>${safeSubject}</h2>
       <ul style="padding-left:20px;line-height:1.6">
@@ -153,6 +153,6 @@ function receiptEmailTemplate(args: {
       <p>Please review and confirm this agreement.</p>
       <a href="${signUrl}" style="display:inline-block;background:#059669;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600">Review &amp; Sign</a>
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0" />
-      <p style="font-size:12px;color:#9ca3af">This is a conversation receipt — not a legally binding contract. Sent via AgreeMint.</p>
+      <p style="font-size:12px;color:#9ca3af">This is a conversation receipt — not a legally binding contract. Sent via MintAgree.</p>
     </div>`;
 }

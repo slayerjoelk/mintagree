@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     email_address: email,
     m_payment_id: crypto.randomUUID(),
     amount: amounts[plan],
-    item_name: `AgreeMint ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan`,
+    item_name: `MintAgree ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan`,
     custom_str1: plan,
     custom_str2: crypto.randomUUID(),
   };

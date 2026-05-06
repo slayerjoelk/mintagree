@@ -123,7 +123,7 @@ export default function SignPage({ params }: { params: { token: string } }) {
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center gap-2 mb-4">
             <span className="inline-block w-3 h-3 rounded-full bg-emerald-500" />
-            <span className="font-semibold text-lg">AgreeMint</span>
+            <span className="font-semibold text-lg">MintAgree</span>
           </div>
           <p className="text-slate-500 text-sm">
             Voice agreement &amp; client sign-off
