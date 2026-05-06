@@ -19,7 +19,7 @@ export default async function DashboardLayout({
           <div className="flex items-center gap-8">
             <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
               <span className="w-2 h-2 rounded-full bg-emerald-600" />
-              AgreeMint
+              MintAgree
             </Link>
           </div>
           <div className="flex items-center gap-3 text-sm">

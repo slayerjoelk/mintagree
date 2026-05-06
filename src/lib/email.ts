@@ -21,7 +21,7 @@ export async function sendMagicLinkEmail(
     const { error } = await resend.emails.send({
       from: FROM,
       to: email,
-      subject: "Sign in to AgreeMint",
+      subject: "Sign in to MintAgree",
       html: magicLinkTemplate(url),
     });
     if (error) return { success: false, error: error instanceof Error ? error.message : (error as {message?: string}).message ?? String(error) };
