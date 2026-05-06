@@ -10,44 +10,60 @@ async function run() {
     const tables = await client.execute(
       "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
     );
-    console.log("TABLES:", tables.rows.map((r) => r.name).join(","));
+    console.log("TABLES:", tables.rows.map((r: any) => r.name).join(","));
 
     const infoUsers = await client.execute("PRAGMA table_info(users)");
-    console.log("USERS_COLS:", infoUsers.rows.map((r) => (r as any).name).join(","));
+    console.log("USERS_COLS:", infoUsers.rows.map((r: any) => r.name).join(","));
 
     const infoReceipts = await client.execute("PRAGMA table_info(receipts)");
-    console.log("RECEIPTS_COLS:", infoReceipts.rows.map((r) => (r as any).name).join(","));
+    console.log("RECEIPTS_COLS:", infoReceipts.rows.map((r: any) => r.name).join(","));
 
     const newUsers = await client.execute(
-      "SELECT count(*) as c FROM users WHERE created_at > datetime('now', '-1 day')"
+      "SELECT count(*) as c FROM users WHERE created_at > datetime('now', '-3 hours')"
     );
-    console.log("NEW_USERS_24H:", (newUsers.rows[0] as any).c);
+    console.log("NEW_USERS_3H:", (newUsers.rows[0] as any).c);
 
     const totalUsers = await client.execute("SELECT count(*) as c FROM users");
     console.log("TOTAL_USERS:", (totalUsers.rows[0] as any).c);
 
     const newReceipts = await client.execute(
-      "SELECT count(*) as c FROM receipts WHERE created_at > datetime('now', '-1 day')"
+      "SELECT count(*) as c FROM receipts WHERE created_at > datetime('now', '-3 hours')"
     );
-    console.log("NEW_RECEIPTS_24H:", (newReceipts.rows[0] as any).c);
+    console.log("NEW_RECEIPTS_3H:", (newReceipts.rows[0] as any).c);
 
     const totalReceipts = await client.execute("SELECT count(*) as c FROM receipts");
     console.log("TOTAL_RECEIPTS:", (totalReceipts.rows[0] as any).c);
 
     const signed = await client.execute(
-      "SELECT count(*) as c FROM receipts WHERE signed_at > datetime('now', '-1 day')"
+      "SELECT count(*) as c FROM receipts WHERE status = 'signed' AND updated_at > datetime('now', '-3 hours')"
     );
-    console.log("SIGNED_24H:", (signed.rows[0] as any).c);
+    console.log("SIGNED_3H:", (signed.rows[0] as any).c);
+
+    const totalSigned = await client.execute(
+      "SELECT count(*) as c FROM receipts WHERE status = 'signed'"
+    );
+    console.log("TOTAL_SIGNED:", (totalSigned.rows[0] as any).c);
+
+    const sent = await client.execute(
+      "SELECT count(*) as c FROM receipts WHERE status = 'sent'"
+    );
+    console.log("TOTAL_SENT:", (sent.rows[0] as any).c);
 
     const disputed = await client.execute(
-      "SELECT count(*) as c FROM receipts WHERE disputed = 1 AND updated_at > datetime('now', '-1 day')"
+      "SELECT count(*) as c FROM receipts WHERE status = 'disputed'"
     );
-    console.log("DISPUTED_24H:", (disputed.rows[0] as any).c);
+    console.log("TOTAL_DISPUTED:", (disputed.rows[0] as any).c);
 
-    const payfast = await client.execute(
-      "SELECT name FROM sqlite_master WHERE type='table' AND name LIKE '%pay%%'"
+    const drafts = await client.execute(
+      "SELECT count(*) as c FROM receipts WHERE status = 'draft'"
     );
-    console.log("PAYFAST_TABLES:", payfast.rows.map((r) => r.name).join(",") || "NONE");
+    console.log("TOTAL_DRAFTS:", (drafts.rows[0] as any).c);
+
+    const infoSign = await client.execute("PRAGMA table_info(signatures)");
+    console.log("SIGNATURES_COLS:", infoSign.rows.map((r: any) => r.name).join(","));
+
+    const infoDel = await client.execute("PRAGMA table_info(receipt_delivery)");
+    console.log("DELIVERY_COLS:", infoDel.rows.map((r: any) => r.name).join(","));
 
     console.log("DONE");
   } catch (e: any) {

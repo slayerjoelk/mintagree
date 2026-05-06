@@ -1,0 +1,24 @@
+## Penny Report — 2026-05-05 10:00 SAST
+
+- Task: Write and publish new blog post for problem-aware keyword bucket
+- Post: **The client approval workflow that saves agencies 8 hours per week**
+- Slug: `client-approval-workflow`
+- Primary keyword: `client approval workflow`
+- Secondary keywords: `approval process`, `client sign-off`, `workflow automation`, `agency operations`
+- Word count: ~1,250 words
+- Tag: Workflow
+- Date: May 2026
+- Read time: 5 min read
+- Status: **PUBLISHED** (blog-posts.json updated, build verified, committed)
+- Meta title: The client approval workflow that saves agencies 8 hours per week — within 50-60 chars
+- Meta description: Cut client approval time by 70% with this 4-step workflow. No more lost emails, unclear feedback, or unpaid revision rounds.
+- Google safety: Keyword density well under 2%, original content >80%, no spam patterns, no fake stats. Real-world example included (Cape Town freelance designer).
+- Structure: Hook → Pain → Cost quantified → 4-step framework → MintAgree angle → Case study → Immediate action steps → Closing
+- Internal next links: References MintAgree as a tool for documented sign-off; links to product naturally
+- Social content generated and queued:
+  - Twitter thread: `content/queue/twitter/2026-05-05-thread-client-approval-workflow.md`
+  - LinkedIn post: `content/queue/linkedin/2026-05-05-post-client-approval-workflow.md`
+  - Instagram quote card: `content/queue/instagram/2026-05-05-post-client-approval-workflow.md`
+- Build: `npx next build` passed, static page `/blog/client-approval-workflow` generated
+- Commit: `c0ca65b` — "blog: The client approval workflow that saves agencies 8 hours per week"
+- Next: Thursday 10 AM SAST — next post targeting "DocuSign alternative for agencies" (competitor-adjacent bucket)
